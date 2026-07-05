@@ -68,6 +68,9 @@ function dispatch_api(string $method, string $path): void
 
     try {
         switch (true) {
+            case $method === 'GET' && $path === '/health':
+                HealthController::index(); break;
+
             case $method === 'GET' && $path === '/config':
                 ConfigController::index(); break;
 

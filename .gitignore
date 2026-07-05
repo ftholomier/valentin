@@ -6,6 +6,10 @@ database/*.sqlite-shm
 # Secrets locaux / serveur — NE JAMAIS versionner (évite l'écrasement FTP)
 config/config.local.php
 
+# Fichiers de session générés (on garde le dossier via .gitkeep)
+storage/sessions/*
+!storage/sessions/.gitkeep
+
 # Dépendances / logs éventuels
 node_modules/
 *.log

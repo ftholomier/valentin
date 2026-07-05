@@ -4,15 +4,43 @@ class Auth
 {
     public static function start(): void
     {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_name(SESSION_NAME);
-            session_set_cookie_params([
-                'httponly' => true,
-                'samesite' => 'Lax',
-                'secure'   => (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off'),
-            ]);
-            session_start();
+        if (session_status() !== PHP_SESSION_NONE) {
+            return;
         }
+
+        // Dossier de sessions dédié et inscriptible (hors webroot) : évite les
+        // pertes de session sur mutualisé quand le save_path par défaut n'est pas
+        // accessible en écriture — cause classique des boucles de connexion.
+        if (defined('APP_ROOT')) {
+            $dir = APP_ROOT . '/storage/sessions';
+            if (!is_dir($dir)) {
+                @mkdir($dir, 0770, true);
+            }
+            if (is_dir($dir) && is_writable($dir)) {
+                session_save_path($dir);
+            }
+        }
+
+        session_name(SESSION_NAME);
+        session_set_cookie_params([
+            'httponly' => true,
+            'samesite' => 'Lax',
+            'secure'   => self::isHttps(),
+            'path'     => '/',
+        ]);
+        session_start();
+    }
+
+    /** Détecte HTTPS de façon robuste (y compris derrière un proxy SSL). */
+    private static function isHttps(): bool
+    {
+        if (!empty($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) !== 'off') {
+            return true;
+        }
+        if (($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https') {
+            return true;
+        }
+        return (int) ($_SERVER['SERVER_PORT'] ?? 0) === 443;
     }
 
     public static function login(int $userId): void
