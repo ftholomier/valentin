@@ -116,6 +116,8 @@ class BookingsController
      */
     public static function validate(): void
     {
+        // Réservé aux salles (et admin) : seule la salle propriétaire peut valider.
+        $user  = Auth::requireRole(['partner', 'admin']);
         $b     = Response::body();
         $token = Helpers::str($b['qr_token'] ?? '');
         if ($token === '') {
@@ -123,7 +125,7 @@ class BookingsController
         }
 
         $booking = Database::one(
-            'SELECT b.*, s.titre, s.date_debut, u.nom AS client
+            'SELECT b.*, s.titre, s.date_debut, s.partner_id, u.nom AS client
              FROM bookings b
              JOIN slots s ON s.id = b.slot_id
              JOIN users u ON u.id = b.user_id
@@ -132,6 +134,10 @@ class BookingsController
         );
         if (!$booking) {
             Response::error('QR code inconnu.', 404);
+        }
+        // Un partenaire ne valide que les billets de SA salle.
+        if ($user['role'] === 'partner' && (int) $booking['partner_id'] !== (int) $user['partner_id']) {
+            Response::error("Ce billet n'appartient pas à votre salle.", 403);
         }
         if ($booking['statut_paiement'] === 'valide') {
             Response::error('Ce billet a déjà été validé.', 409, [

@@ -37,6 +37,8 @@ const api = {
   book:          (slotId)=> api.post('/bookings', { slot_id: slotId }),
   bookings:      ()      => api.get('/bookings'),
   checkout:      (d)     => api.post('/payments/checkout', d),
+  proDashboard:  ()      => api.get('/pro/dashboard'),
+  validateQr:    (token) => api.post('/bookings/validate', { qr_token: token }),
 };
 
 /* ---------- Formatage ---------- */

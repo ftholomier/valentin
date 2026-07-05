@@ -48,7 +48,7 @@ class Auth
             return null;
         }
         $u = Database::one(
-            'SELECT id, role, nom, email, ville, created_at FROM users WHERE id = ?',
+            'SELECT id, role, nom, email, ville, partner_id, created_at FROM users WHERE id = ?',
             [$id]
         );
         return $u ?: null;
@@ -60,6 +60,16 @@ class Auth
         $u = self::user();
         if ($u === null) {
             Response::error('Authentification requise.', 401);
+        }
+        return $u;
+    }
+
+    /** Garde-fou : exige un des rôles donnés. */
+    public static function requireRole(array $roles): array
+    {
+        $u = self::requireLogin();
+        if (!in_array($u['role'], $roles, true)) {
+            Response::error('Accès réservé.', 403);
         }
         return $u;
     }

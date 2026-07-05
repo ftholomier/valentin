@@ -32,6 +32,7 @@ $routes = [
     '/connexion'   => ['view' => 'connexion',    'title' => 'Connexion — LastFit',                 'script' => 'auth.js',      'solid' => true],
     '/inscription' => ['view' => 'inscription',  'title' => 'Créer un compte — LastFit',           'script' => 'auth.js',      'solid' => true],
     '/mon-compte'  => ['view' => 'compte',       'title' => 'Mon compte — LastFit',                'script' => 'compte.js',    'solid' => true],
+    '/pro'         => ['view' => 'pro',          'title' => 'Espace pro — LastFit',                'script' => 'pro.js',       'solid' => true],
 ];
 
 if (isset($routes[$path])) {
@@ -93,6 +94,9 @@ function dispatch_api(string $method, string $path): void
 
             case $method === 'POST' && $path === '/payments/checkout':
                 PaymentsController::checkout(); break;
+
+            case $method === 'GET' && $path === '/pro/dashboard':
+                ProController::dashboard(); break;
 
             default:
                 Response::error("Route introuvable : $method $path", 404);

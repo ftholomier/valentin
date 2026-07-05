@@ -97,11 +97,12 @@ cp config/config.local.example.php config/config.local.php
 | POST | `/api/bookings` | Réserver (atomique, anti-survente) |
 | GET  | `/api/bookings` | Historique du sportif |
 | POST | `/api/payments/checkout` | Paiement simulé → QR |
-| POST | `/api/bookings/validate` | Validation d'un QR côté salle |
+| POST | `/api/bookings/validate` | Validation d'un QR **(salle propriétaire / admin uniquement)** |
+| GET  | `/api/pro/dashboard` | Dashboard salle : cours, remplissage, CA (rôle `partner`) |
 
 Réponse : `{ "success": bool, "message": string, "data": ... }`.
 
-**Pages (URLs propres)** : `/` · `/resultats` · `/cours?id=` · `/checkout?slot=` · `/connexion` · `/inscription` · `/mon-compte`.
+**Pages (URLs propres)** : `/` · `/resultats` · `/cours?id=` · `/checkout?slot=` · `/connexion` · `/inscription` · `/mon-compte` · `/pro`.
 
 ---
 
@@ -146,14 +147,15 @@ php -S localhost:8000 -t public router.php     # http://localhost:8000
 
 **Fait :** accueil dynamique · recherche filtrable + carte · fiche cours (compte à rebours) ·
 inscription/connexion/session · réservation anti-survente · paiement simulé (Stripe mock) ·
-génération + affichage **QR code** · espace sportif (historique, stats, QR) · validation QR ·
+génération + affichage **QR code** · espace sportif (historique, stats, QR) ·
+**Dashboard salle (espace pro)** : cours du jour, validation QR sécurisée, remplissage & CA ·
+redirection par rôle (sportif → `/mon-compte`, salle → `/pro`) ·
 base SQL (SQLite + dump MySQL) · **architecture webroot isolé + secrets séparés**.
 
 **À venir :**
-- [ ] **Dashboard salle (espace pro)** : cours du jour, scan/validation QR, CA & remplissage
 - [ ] **Backoffice admin** : commission, gestion des sports & villes
 - [ ] Favoris, factures téléchargeables, vraie intégration Stripe (webhook)
 
 ---
 
-*Dernière mise à jour : itération 2 — refactor architecture (public/, front controller, secrets séparés).*
+*Dernière mise à jour : itération 3 — Espace Pro Salle (dashboard, validation QR, CA & remplissage).*

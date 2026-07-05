@@ -10,9 +10,12 @@ function escapeHtmlLite(s) {
 function clearFieldErrors() {
   document.querySelectorAll('[data-err]').forEach((el) => { el.classList.add('hidden'); el.textContent = ''; });
 }
-function redirectTarget() {
+function redirectTarget(user) {
   const r = new URLSearchParams(location.search).get('redirect');
-  return r || '/mon-compte';
+  if (r) return r;
+  // Redirection par rôle : les salles vont vers l'espace pro.
+  if (user && user.role === 'partner') return '/pro';
+  return '/mon-compte';
 }
 
 function initLogin() {
@@ -23,11 +26,11 @@ function initLogin() {
     const btn = document.getElementById('submit-btn');
     btn.disabled = true; btn.textContent = 'Connexion…';
     try {
-      await api.login({
+      const user = await api.login({
         email: form.email.value.trim(),
         password: form.password.value,
       });
-      location.href = redirectTarget();
+      location.href = redirectTarget(user);
     } catch (err) {
       showAlert(err.message || 'Connexion impossible.');
       btn.disabled = false; btn.textContent = 'Se connecter';
@@ -68,7 +71,7 @@ function initRegister() {
 async function redirectIfLogged() {
   try {
     const u = await api.me();
-    if (u) location.href = redirectTarget();
+    if (u) location.href = redirectTarget(u);
   } catch (_) {}
 }
 

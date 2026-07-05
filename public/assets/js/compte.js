@@ -92,7 +92,7 @@ function bookingCardHTML(b) {
       </div>
       ${qrImg ? `
       <div class="ticket-qr">
-        <p class="uplabel muted" style="margin-bottom:12px">${b.statut_paiement === 'valide' ? 'Entrée déjà validée' : 'À présenter à l\\'accueil'}</p>
+        <p class="uplabel muted" style="margin-bottom:12px">${b.statut_paiement === 'valide' ? 'Entrée déjà validée' : "À présenter à l'accueil"}</p>
         <img src="${qrImg}" alt="QR code" onerror="this.style.display='none'" />
         <div class="ticket-token">${escapeHtml(b.qr_token)}</div>
       </div>` : (b.statut_paiement === 'en_attente'
