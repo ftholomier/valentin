@@ -34,11 +34,11 @@
     </div>
   </footer>
 
-  <script src="/assets/js/api.js"></script>
-  <script src="/assets/js/components.js"></script>
-  <script src="/assets/js/ui.js"></script>
+  <script src="/assets/js/api.js?v=<?= APP_VERSION ?>"></script>
+  <script src="/assets/js/components.js?v=<?= APP_VERSION ?>"></script>
+  <script src="/assets/js/ui.js?v=<?= APP_VERSION ?>"></script>
   <?php if (!empty($pageScript)): ?>
-  <script src="/assets/js/<?= htmlspecialchars($pageScript, ENT_QUOTES) ?>"></script>
+  <script src="/assets/js/<?= htmlspecialchars($pageScript, ENT_QUOTES) ?>?v=<?= APP_VERSION ?>"></script>
   <?php endif; ?>
 </body>
 </html>

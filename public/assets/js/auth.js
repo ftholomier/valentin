@@ -11,7 +11,9 @@ function clearFieldErrors() {
   document.querySelectorAll('[data-err]').forEach((el) => { el.classList.add('hidden'); el.textContent = ''; });
 }
 function redirectTarget(user) {
-  const r = new URLSearchParams(location.search).get('redirect');
+  let r = new URLSearchParams(location.search).get('redirect');
+  // Garde anti-boucle : on ne redirige jamais vers les pages d'authentification.
+  if (r && (r.startsWith('/connexion') || r.startsWith('/inscription'))) r = null;
   if (r) return r;
   // Redirection par rôle : les salles vont vers l'espace pro.
   if (user && user.role === 'partner') return '/pro';

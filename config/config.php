@@ -29,6 +29,10 @@ define('APP_NAME', 'LastFit');
 define('APP_ENV', lf_cfg($secrets, 'app_env', 'LF_ENV', 'prod'));   // 'dev' | 'prod'
 define('SESSION_NAME', 'lastfit_sess');
 
+// Version des assets (CSS/JS) — à incrémenter à chaque déploiement pour forcer
+// le rechargement côté navigateur (anti-cache). En dev, on repart du temps courant.
+define('APP_VERSION', APP_ENV === 'dev' ? (string) time() : '2026070501');
+
 // --- Base de données -------------------------------------------------------
 define('DB_DRIVER', lf_cfg($secrets, 'db_driver', 'LF_DB_DRIVER', 'sqlite'));   // 'sqlite' | 'mysql'
 
