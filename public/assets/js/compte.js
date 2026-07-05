@@ -11,7 +11,7 @@ async function loadAccount() {
   const root = document.getElementById('account-root');
 
   const user = await api.me().catch(() => null);
-  if (!user) { location.href = 'connexion.html?redirect=mon-compte.html'; return; }
+  if (!user) { location.href = '/connexion?redirect=/mon-compte'; return; }
 
   let bookings = [];
   try {
@@ -25,9 +25,12 @@ async function loadAccount() {
   const dépense = bookings.reduce((sum, b) => sum + (b.statut_paiement === 'annule' ? 0 : b.montant_paye), 0);
 
   root.innerHTML = `
-    <div style="margin-bottom:32px">
-      <span class="uplabel muted">Espace sportif</span>
-      <h1 class="page-title">Bonjour, ${escapeHtml(user.nom.split(' ')[0])} 👋</h1>
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-bottom:32px">
+      <div>
+        <span class="uplabel muted">Espace sportif</span>
+        <h1 class="page-title">Bonjour, ${escapeHtml(user.nom.split(' ')[0])} 👋</h1>
+      </div>
+      <a href="#" id="logout-link" class="link-arrow uplabel" style="color:var(--ink)"><i data-lucide="log-out"></i> Déconnexion</a>
     </div>
 
     <div style="display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));margin-bottom:40px">
@@ -43,11 +46,20 @@ async function loadAccount() {
   const list = document.getElementById('bookings-list');
   if (bookings.length === 0) {
     list.innerHTML = `<div class="empty">Aucune réservation pour l'instant.<br>
-      <a href="resultats.html" class="link-arrow" style="justify-content:center;margin-top:16px;color:var(--ink)">Trouver un cours <i data-lucide="arrow-right"></i></a></div>`;
+      <a href="/resultats" class="link-arrow" style="justify-content:center;margin-top:16px;color:var(--ink)">Trouver un cours <i data-lucide="arrow-right"></i></a></div>`;
   } else {
     list.innerHTML = bookings.map(bookingCardHTML).join('');
   }
   renderIcons();
+
+  const logout = document.getElementById('logout-link');
+  if (logout) {
+    logout.addEventListener('click', async (e) => {
+      e.preventDefault();
+      await api.logout();
+      location.href = '/';
+    });
+  }
 }
 
 function statTile(value, label) {

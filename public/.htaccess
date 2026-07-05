@@ -1,0 +1,17 @@
+# ============================================================
+#  LastFit — dossier public (document root)
+# ============================================================
+DirectoryIndex index.php
+Options -Indexes
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Sert directement les fichiers/dossiers réels (assets CSS/JS/images)
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    # Tout le reste passe par le front controller
+    RewriteRule ^ index.php [QSA,L]
+</IfModule>

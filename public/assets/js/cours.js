@@ -18,7 +18,7 @@ async function loadCourse() {
   const equip = (s.equipements || []).map((e) => `<span class="tag">${escapeHtml(e)}</span>`).join('');
 
   root.innerHTML = `
-    <a href="resultats.html" class="link-arrow uplabel muted" style="margin-bottom:20px"><i data-lucide="arrow-left"></i> Retour aux résultats</a>
+    <a href="/resultats" class="link-arrow uplabel muted" style="margin-bottom:20px"><i data-lucide="arrow-left"></i> Retour aux résultats</a>
 
     <div class="detail-hero">
       <img src="${escapeHtml(s.image_url)}" alt="${escapeHtml(s.titre)}" />
@@ -99,9 +99,9 @@ function startCourseCountdown() {
 
 async function reserve(slotId) {
   const user = window.__user;
-  const target = `checkout.html?slot=${slotId}`;
+  const target = `/checkout?slot=${slotId}`;
   if (!user) {
-    location.href = `connexion.html?redirect=${encodeURIComponent(target)}`;
+    location.href = `/connexion?redirect=${encodeURIComponent(target)}`;
     return;
   }
   location.href = target;

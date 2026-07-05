@@ -10,7 +10,7 @@ async function initCheckout() {
   // Authentification requise
   const user = await api.me().catch(() => null);
   if (!user) {
-    location.href = `connexion.html?redirect=${encodeURIComponent('checkout.html?slot=' + slotId)}`;
+    location.href = `/connexion?redirect=${encodeURIComponent('/checkout?slot=' + slotId)}`;
     return;
   }
 
@@ -23,13 +23,13 @@ async function initCheckout() {
   const s = CURRENT_SLOT;
 
   if (s.places_restantes <= 0 || s.statut === 'complet') {
-    root.innerHTML = `<div class="empty">Ce cours est complet.<br><a href="resultats.html" class="link-arrow" style="justify-content:center;margin-top:16px;color:var(--ink)">Voir d'autres cours <i data-lucide="arrow-right"></i></a></div>`;
+    root.innerHTML = `<div class="empty">Ce cours est complet.<br><a href="/resultats" class="link-arrow" style="justify-content:center;margin-top:16px;color:var(--ink)">Voir d'autres cours <i data-lucide="arrow-right"></i></a></div>`;
     renderIcons();
     return;
   }
 
   root.innerHTML = `
-    <a href="cours.html?id=${s.id}" class="link-arrow uplabel muted" style="margin-bottom:20px"><i data-lucide="arrow-left"></i> Retour au cours</a>
+    <a href="/cours?id=${s.id}" class="link-arrow uplabel muted" style="margin-bottom:20px"><i data-lucide="arrow-left"></i> Retour au cours</a>
     <span class="uplabel muted">Finaliser la réservation</span>
     <h1 class="page-title" style="margin-bottom:24px">Paiement</h1>
 
@@ -122,8 +122,8 @@ function showTicket(result) {
       </div>
     </div>
     <div style="display:flex;gap:12px;margin-top:20px">
-      <a href="mon-compte.html" class="btn btn-primary" style="flex:1">Mes réservations</a>
-      <a href="resultats.html" class="btn btn-outline" style="flex:1">Autres cours</a>
+      <a href="/mon-compte" class="btn btn-primary" style="flex:1">Mes réservations</a>
+      <a href="/resultats" class="btn btn-outline" style="flex:1">Autres cours</a>
     </div>
   `;
   renderIcons();

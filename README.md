@@ -3,9 +3,8 @@
 Plateforme web de **cours collectifs de dernière minute** : les salles de sport proposent
 leurs places invendues à prix réduit. Réservation flash, paiement, QR code d'accès.
 
-> **État du projet : MVP — Tranche verticale n°1 livrée**
-> Parcours sportif complet de bout en bout : accueil → recherche/filtres → fiche cours →
-> réservation → paiement (simulé) → **QR code de validation**.
+> **État : MVP — Tranche verticale n°1** (parcours sportif complet)
+> Accueil → recherche/filtres → fiche cours → réservation → paiement (simulé) → **QR code**.
 
 ---
 
@@ -13,166 +12,148 @@ leurs places invendues à prix réduit. Réservation flash, paiement, QR code d'
 
 | Couche | Choix |
 |---|---|
-| **Backend** | PHP 8.x **100% natif**, orienté objet, routeur/switch propre (aucun framework) |
-| **Base de données** | **SQL via PDO natif (aucun ORM)** — SQLite par défaut (dev), MySQL/MariaDB en prod |
-| **Frontend** | HTML5 + **CSS3 vanille** (design LastFit réimplémenté sans Tailwind) + **JavaScript vanilla** |
-| **Communication** | **API First** — le PHP sert des endpoints JSON, le front consomme via `fetch()` |
-| **Icônes / polices** | Lucide (CDN) + Google Fonts (Archivo / Inter) — chargés côté navigateur |
+| **Backend** | PHP 8.x **100% natif**, orienté objet, **front controller unique** (aucun framework) |
+| **Base de données** | **SQL via PDO natif (aucun ORM)** — SQLite (dev) / MySQL-MariaDB (prod) |
+| **Frontend** | HTML5 + **CSS3 vanille** (design LastFit sans Tailwind) + **JavaScript vanilla** |
+| **Communication** | **API First** — endpoints JSON consommés via `fetch()` |
 
 ---
 
-## 📁 Arborescence
+## 📁 Arborescence (webroot isolé)
+
+> ⚠️ **Le document root de l'hébergeur doit pointer sur `public/`.**
+> Tout le code, la config et les données sont **au-dessus** du webroot → inaccessibles depuis le web.
 
 ```
 valentin/
-├── index.html              Accueil (hero, recherche, offres dynamiques, principe, FAQ)
-├── resultats.html          Recherche : filtres JS (ville, sport, prix, tri) + carte OSM
-├── cours.html              Fiche cours : détail, compte à rebours, réservation
-├── checkout.html           Paiement simulé → génération du QR code
-├── connexion.html          Connexion (session)
-├── inscription.html        Création de compte sportif
-├── mon-compte.html         Espace sportif : historique + QR codes
-├── router.php              Routeur du serveur PHP intégré (dev uniquement)
-├── .htaccess               Réécriture /api + protection des dossiers sensibles
+├── public/                     ← 🌐 DOCUMENT ROOT (seul dossier exposé)
+│   ├── index.php               Front controller unique (pages + /api)
+│   ├── .htaccess               Réécriture : tout vers index.php
+│   └── assets/
+│       ├── css/app.css         Design system LastFit (CSS natif)
+│       └── js/                 api, components, ui + scripts de page
 │
-├── api/
-│   ├── index.php           Front controller de l'API (routeur natif)
-│   └── .htaccess           Réécriture des URLs propres
+├── app/                        ← Code applicatif (hors web)
+│   ├── bootstrap.php           Chargement config + classes
+│   ├── Core/                   Database, Response, Auth, Helpers
+│   ├── Controllers/            Config, Slots, Auth, Bookings, Payments
+│   └── Views/                  Vues + partials (head, header, footer)
 │
-├── src/                    Code PHP applicatif (hors accès web)
-│   ├── Database.php        Connexion PDO (SQLite/MySQL) + helpers requêtes
-│   ├── Response.php        Réponses JSON normalisées
-│   ├── Auth.php            Authentification par session + hash mots de passe
-│   ├── Helpers.php         Distance Haversine, token QR, commission…
-│   ├── .htaccess           Deny (aucun accès web)
-│   └── Controllers/
-│       ├── ConfigController.php     Sports, villes, taux de commission
-│       ├── SlotsController.php       Liste + fiche des cours
-│       ├── AuthController.php        Register / login / logout / me
-│       ├── BookingsController.php    Réservation, historique, validation QR
-│       └── PaymentsController.php    Paiement (simulation Stripe)
+├── config/                     ← Configuration (hors web)
+│   ├── config.php              VERSIONNÉ — aucun secret
+│   ├── config.local.example.php  Modèle à copier
+│   └── config.local.php        🔒 git-ignoré — TES identifiants (créé sur le serveur)
 │
-├── config/
-│   ├── config.php          Configuration (driver DB, identifiants, environnement)
-│   └── .htaccess           Deny
+├── database/                   ← Base & migrations (hors web)
+│   ├── schema.sql              Schéma SQLite
+│   ├── install.php             Installateur + jeu de démo (CLI)
+│   └── lastfit_mysql.sql       ⬇️ Dump MySQL (schéma + données)
 │
-├── database/
-│   ├── schema.sql          Schéma SQLite
-│   ├── install.php         Installateur + jeu de démo (CLI)
-│   ├── lastfit_mysql.sql   ⬇️ DUMP MySQL téléchargeable (schéma + données)
-│   └── .htaccess           Deny
-│
-├── assets/
-│   ├── css/app.css         Design system LastFit (CSS natif)
-│   └── js/
-│       ├── api.js          Client fetch + formatage
-│       ├── components.js   Cartes de cours, compte à rebours
-│       ├── ui.js           Header, icônes, toasts, état de session
-│       ├── accueil.js / resultats.js / cours.js / checkout.js / compte.js / auth.js
-│
-└── design/
-    └── reference-lastfit.html   Maquette validée d'origine (référence design)
+├── design/reference-lastfit.html   Maquette validée d'origine
+├── router.php                  Serveur PHP intégré (dev uniquement)
+└── README.md
+```
+
+---
+
+## 🔐 Configuration & secrets (important)
+
+Les identifiants ne sont **jamais** dans le dépôt :
+
+- `config/config.php` (versionné) ne contient **aucun secret** ; il lit les valeurs depuis
+  `config/config.local.php`, sinon des variables d'environnement `LF_*`, sinon des défauts.
+- `config/config.local.php` est **git-ignoré**. Tu le crées **une fois** sur le serveur
+  → un envoi FTP du projet ne l'écrase jamais.
+
+**Mise en place sur le serveur :**
+```bash
+cp config/config.local.example.php config/config.local.php
+# puis éditer config.local.php avec tes identifiants MySQL Nuxit
 ```
 
 ---
 
 ## 🗄️ Modèle de données (5 tables)
 
-- **users** — sportifs / salles / admin, rôles, rattachement salle, mot de passe hashé.
-- **partners** — salles : description, adresse, GPS (lat/lng), équipements, note.
-- **slots** — cours : sport, coach, horaire, prix initial/réduit, places totales/restantes, statut.
-- **bookings** — réservations : statut paiement, token QR, montants (payé / commission / part salle).
+- **users** — sportifs / salles / admin, rôles, mot de passe hashé.
+- **partners** — salles : description, adresse, GPS, équipements, note.
+- **slots** — cours : sport, coach, horaire, prix initial/réduit, places, statut.
+- **bookings** — réservations : statut paiement, token QR, montants (payé/commission/salle).
 - **config** — clé/valeur : `commission_rate`, `sports`, `villes`.
 
-**Business model** : commission configurable (défaut **15%**). Ex. cours à 8 € → 1,20 € plateforme / 6,80 € salle.
+**Commission** configurable (défaut **15%**). Ex. 12 € → 1,80 € plateforme / 10,20 € salle.
 
 ---
 
-## 🔌 API (endpoints JSON)
+## 🔌 API (endpoints JSON, préfixe `/api`)
 
 | Méthode | Route | Rôle |
 |---|---|---|
 | GET  | `/api/config` | Sports, villes, taux de commission |
-| GET  | `/api/slots` | Liste des cours (filtres : `ville`, `sport`, `date`, `q`, `lat`, `lng`) |
-| GET  | `/api/slots/{id}` | Fiche détaillée d'un cours |
-| POST | `/api/auth/register` | Inscription |
-| POST | `/api/auth/login` | Connexion |
-| POST | `/api/auth/logout` | Déconnexion |
+| GET  | `/api/slots` | Cours (filtres `ville`, `sport`, `date`, `q`, `lat`, `lng`) |
+| GET  | `/api/slots/{id}` | Fiche d'un cours |
+| POST | `/api/auth/register` · `/login` · `/logout` | Session |
 | GET  | `/api/auth/me` | Utilisateur courant |
-| POST | `/api/bookings` | Réserver une place (atomique, anti-survente) |
+| POST | `/api/bookings` | Réserver (atomique, anti-survente) |
 | GET  | `/api/bookings` | Historique du sportif |
-| POST | `/api/payments/checkout` | Paiement simulé → génère le QR |
+| POST | `/api/payments/checkout` | Paiement simulé → QR |
 | POST | `/api/bookings/validate` | Validation d'un QR côté salle |
 
-Réponse type : `{ "success": true, "message": "...", "data": ... }`.
+Réponse : `{ "success": bool, "message": string, "data": ... }`.
+
+**Pages (URLs propres)** : `/` · `/resultats` · `/cours?id=` · `/checkout?slot=` · `/connexion` · `/inscription` · `/mon-compte`.
 
 ---
 
 ## 🚀 Lancer en local (dev, SQLite)
 
 ```bash
-# 1. Créer et peupler la base de démo
-php database/install.php
-
-# 2. Démarrer le serveur
-php -S localhost:8000 router.php
-
-# 3. Ouvrir http://localhost:8000
+php database/install.php                       # crée + peuple la base de démo
+php -S localhost:8000 -t public router.php     # http://localhost:8000
 ```
 
-**Comptes de démo** (mot de passe : `demo1234`) :
-- `lea@demo.fr` — sportif
-- `pro@demo.fr` — salle (espace pro, à venir)
-- `admin@demo.fr` — admin (backoffice, à venir)
-
-**Cartes de test au paiement** : `4242 4242 4242 4242` = accepté · `4000 0000 0000 0002` = refusé.
+**Comptes de démo** (mot de passe `demo1234`) : `lea@demo.fr` (sportif), `pro@demo.fr`, `admin@demo.fr`.
+**Cartes de test** : `4242 4242 4242 4242` = accepté · `4000 0000 0000 0002` = refusé.
 
 ---
 
-## 🌐 Déploiement sur hébergeur PHP (MySQL)
+## 🌐 Déploiement sur Nuxit (mutualisé, MySQL)
 
-1. Uploader les fichiers (le `document root` doit pointer sur la racine du projet).
-2. Créer une base MySQL, puis **importer `database/lastfit_mysql.sql`** (phpMyAdmin).
-3. Dans `config/config.php`, passer `DB_DRIVER` à `mysql` et renseigner
-   `DB_HOST` / `DB_NAME` / `DB_USER` / `DB_PASS` (ou via variables d'environnement `LF_DB_*`).
-4. Vérifier que `mod_rewrite` est actif (URLs `/api/...`).
+1. **FTP** : uploader tout le projet.
+2. **Document root** : dans le panel Nuxit, faire pointer le domaine sur le dossier **`public/`**.
+3. **Base MySQL** : créer une base dans le panel, puis **importer `database/lastfit_mysql.sql`** (phpMyAdmin).
+4. **Config serveur** : copier `config/config.local.example.php` → `config/config.local.php`,
+   renseigner l'hôte/base/user/pass MySQL Nuxit, et `app_env => 'prod'`.
+5. `mod_rewrite` est actif chez Nuxit → les URLs `/api/...` et les pages propres fonctionnent.
 
-> ⚠️ **GitHub Pages ne peut PAS héberger ce projet** (Pages ne sert que du statique).
-> Il faut un hébergement avec PHP + base SQL.
+> ⚠️ **GitHub Pages ne peut pas héberger ce projet** (PHP + base SQL requis).
 
 ---
 
 ## 🔒 Sécurité (MVP)
 
+- **Code, config et données hors du webroot** (seul `public/` est exposé) → non téléchargeables.
 - Requêtes **PDO préparées** partout (anti-injection SQL).
-- Mots de passe **hashés** (`password_hash` / bcrypt).
+- Mots de passe **hashés** (`password_hash`/bcrypt).
 - **Sessions** HttpOnly + `SameSite=Lax` + régénération d'ID à la connexion.
-- Dossiers `src/`, `config/`, `database/` **bloqués** en accès web direct (`.htaccess`).
-- Sortie échappée côté client (`escapeHtml`).
-- Réservation **atomique** (UPDATE conditionnel) → pas de survente sur les places.
+- Secrets **hors dépôt** (`config.local.php` git-ignoré).
+- Sortie échappée côté client (`escapeHtml`) et serveur (`htmlspecialchars`).
+- Réservation **atomique** (UPDATE conditionnel) → pas de survente.
 
 ---
 
-## ✅ Fonctionnalités livrées (itération 1)
+## ✅ Livré (itération 1) — 🔜 Prochaines étapes
 
-- [x] Accueil fidèle au design validé, offres du soir **dynamiques** (API)
-- [x] Recherche avec filtres **100% client** (ville, sport, date, prix, tri) + carte
-- [x] Fiche cours : compte à rebours JS, gestion complet/disponible
-- [x] Inscription / connexion / session
-- [x] Réservation flash avec mise à jour des places (anti-survente)
-- [x] Paiement **simulé** (Stripe mock, carte de refus de test)
-- [x] Génération et affichage du **QR code** (billet)
-- [x] Espace sportif : historique + statistiques + QR
-- [x] Endpoint de **validation QR** côté salle
-- [x] Base SQL (SQLite dev + **dump MySQL téléchargeable**)
+**Fait :** accueil dynamique · recherche filtrable + carte · fiche cours (compte à rebours) ·
+inscription/connexion/session · réservation anti-survente · paiement simulé (Stripe mock) ·
+génération + affichage **QR code** · espace sportif (historique, stats, QR) · validation QR ·
+base SQL (SQLite + dump MySQL) · **architecture webroot isolé + secrets séparés**.
 
-## 🔜 Prochaines itérations
-
+**À venir :**
 - [ ] **Dashboard salle (espace pro)** : cours du jour, scan/validation QR, CA & remplissage
-- [ ] **Backoffice admin** : gestion de la commission, ajout/suppression de sports & villes
-- [ ] Favoris sportifs, factures téléchargeables
-- [ ] Vraie intégration Stripe (webhook)
+- [ ] **Backoffice admin** : commission, gestion des sports & villes
+- [ ] Favoris, factures téléchargeables, vraie intégration Stripe (webhook)
 
 ---
 
-*Dernière mise à jour : itération 1 — tranche verticale sportif de bout en bout.*
+*Dernière mise à jour : itération 2 — refactor architecture (public/, front controller, secrets séparés).*

@@ -33,10 +33,10 @@ async function loadDisciplines() {
     const cfg = await api.config();
     const pills = cfg.sports.map((sport) => {
       const icon = SPORT_ICONS[sport] || 'circle';
-      return `<a class="pill" href="resultats.html?sport=${encodeURIComponent(sport)}">
+      return `<a class="pill" href="/resultats?sport=${encodeURIComponent(sport)}">
         <span class="ic"><i data-lucide="${icon}"></i></span><span class="lbl">${escapeHtml(sport)}</span></a>`;
     }).join('');
-    wrap.innerHTML = pills + `<a class="pill pill-dark link-arrow" href="resultats.html">Toutes <i data-lucide="arrow-right"></i></a>`;
+    wrap.innerHTML = pills + `<a class="pill pill-dark link-arrow" href="/resultats">Toutes <i data-lucide="arrow-right"></i></a>`;
     renderIcons();
   } catch (_) {}
 }

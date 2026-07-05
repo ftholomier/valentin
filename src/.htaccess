@@ -1,3 +1,0 @@
-# Aucun accès web au code PHP applicatif.
-Require all denied
-Deny from all

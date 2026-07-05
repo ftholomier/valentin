@@ -7,10 +7,7 @@
  * En prod MySQL : importe plutôt database/lastfit_mysql.sql via phpMyAdmin.
  */
 
-require_once __DIR__ . '/../config/config.php';
-require_once __DIR__ . '/../src/Database.php';
-require_once __DIR__ . '/../src/Auth.php';
-require_once __DIR__ . '/../src/Helpers.php';
+require_once __DIR__ . '/../app/bootstrap.php';
 
 $isCli = (php_sapi_name() === 'cli');
 function say(string $m, bool $cli): void { echo $m . ($cli ? "\n" : "<br>"); }

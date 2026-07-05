@@ -1,26 +1,3 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Créer un compte — LastFit</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/app.css">
-  <script src="https://unpkg.com/lucide@latest"></script>
-</head>
-<body>
-
-  <header id="site-header" class="solid-static">
-    <div class="hdr-inner">
-      <a href="index.html" class="hdr-word">LASTFIT<span class="accent-dot">.</span></a>
-      <div class="hdr-actions">
-        <a href="connexion.html" class="hdr-login uplabel">Se connecter</a>
-      </div>
-    </div>
-  </header>
-
   <main class="page page-narrow">
     <span class="uplabel muted">Rejoignez LastFit</span>
     <h1 class="page-title" style="margin-bottom:24px">Créer un compte</h1>
@@ -50,13 +27,7 @@
         <button type="submit" class="btn btn-primary btn-block" id="submit-btn">Créer mon compte</button>
       </form>
       <p class="muted" style="font-size:13px;margin-top:20px;text-align:center">
-        Déjà inscrit ? <a href="connexion.html" style="color:var(--ink);font-weight:600">Connectez-vous</a>
+        Déjà inscrit ? <a href="/connexion" style="color:var(--ink);font-weight:600">Connectez-vous</a>
       </p>
     </div>
   </main>
-
-  <script src="assets/js/api.js"></script>
-  <script src="assets/js/ui.js"></script>
-  <script src="assets/js/auth.js"></script>
-</body>
-</html>

@@ -24,7 +24,7 @@ function slotCardHTML(s) {
   const mins = minutesUntil(s.date_debut);
   const dist = s.distance_km != null ? ' · ' + fmt.distance(s.distance_km) : '';
   return `
-    <a class="card" href="cours.html?id=${s.id}">
+    <a class="card" href="/cours?id=${s.id}">
       <div class="card-media">
         <img src="${escapeHtml(s.image_url)}" alt="${escapeHtml(s.titre)}" loading="lazy" />
         <span class="card-badge tnum">-${s.reduction}%</span>
@@ -50,7 +50,7 @@ function slotRowHTML(s) {
   const soldout = s.places_restantes <= 0 || s.statut === 'complet';
   const dist = s.distance_km != null ? fmt.distance(s.distance_km) : '';
   return `
-    <a class="result-row" href="cours.html?id=${s.id}">
+    <a class="result-row" href="/cours?id=${s.id}">
       <div class="rr-media">
         <img src="${escapeHtml(s.image_url)}" alt="" loading="lazy" />
         <span class="card-badge tnum">-${s.reduction}%</span>

@@ -3,6 +3,9 @@ database/*.sqlite
 database/*.sqlite-wal
 database/*.sqlite-shm
 
+# Secrets locaux / serveur — NE JAMAIS versionner (évite l'écrasement FTP)
+config/config.local.php
+
 # Dépendances / logs éventuels
 node_modules/
 *.log

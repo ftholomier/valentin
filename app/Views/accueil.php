@@ -1,37 +1,3 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LastFit — Bougez plus. Payez moins.</title>
-  <meta name="description" content="Le sport de dernière minute. Les places invendues des plus beaux studios, près de chez vous, jusqu'à -70%." />
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/app.css">
-  <script src="https://unpkg.com/lucide@latest"></script>
-</head>
-<body>
-
-  <!-- ============ HEADER ============ -->
-  <header id="site-header">
-    <div class="hdr-inner">
-      <a href="index.html" class="hdr-word">LASTFIT<span class="accent-dot">.</span></a>
-      <nav class="hdr-nav uplabel">
-        <a href="#offres" class="hdr-link">Offres</a>
-        <a href="resultats.html" class="hdr-link">Rechercher</a>
-        <a href="#comment" class="hdr-link">Le principe</a>
-        <a href="#faq" class="hdr-link">FAQ</a>
-      </nav>
-      <div class="hdr-actions">
-        <a href="#" class="hdr-pro uplabel">Inscrire ma salle</a>
-        <a href="connexion.html" class="hdr-login uplabel" data-auth-login>Se connecter</a>
-        <a href="mon-compte.html" class="hdr-login uplabel hidden" data-auth-account>Mon compte · <span data-auth-name></span></a>
-      </div>
-    </div>
-  </header>
-
   <!-- ============ HERO ============ -->
   <section class="hero">
     <img class="hero-img" src="https://images.unsplash.com/photo-1552196563-55cd4e45efb3?auto=format&fit=crop&w=2000&q=80" alt="Sportive en plein cours collectif" />
@@ -45,7 +11,7 @@
 
   <!-- ============ RECHERCHE ============ -->
   <section class="search-wrap">
-    <form class="search-box" id="search-form" action="resultats.html" method="get">
+    <form class="search-box" id="search-form" action="/resultats" method="get">
       <label class="search-field">
         <i data-lucide="map-pin"></i>
         <span class="fmini"><span>Ville</span>
@@ -95,7 +61,7 @@
         <span class="uplabel muted">Dernière minute · autour de vous</span>
         <h2 style="margin-top:8px">Les bonnes affaires du soir</h2>
       </div>
-      <a href="resultats.html" class="link-arrow uplabel" style="color:var(--ink)">Tout voir <i data-lucide="arrow-right"></i></a>
+      <a href="/resultats" class="link-arrow uplabel" style="color:var(--ink)">Tout voir <i data-lucide="arrow-right"></i></a>
     </div>
     <div class="cards-grid" id="offres-grid">
       <div class="loading-wrap" style="grid-column:1/-1"><span class="spinner"></span><p style="margin-top:12px">Chargement des offres…</p></div>
@@ -109,7 +75,7 @@
     <div class="fb-inner">
       <h2>Testez tout<span class="accent-dot">.</span><br/>Sans rien signer<span class="accent-dot">.</span></h2>
       <p>Yoga lundi, boxe jeudi, Pilates dimanche. Changez de studio quand vous voulez, payez seulement les séances que vous faites.</p>
-      <a href="resultats.html" class="btn btn-light link-arrow" style="margin-top:32px;width:fit-content">Voir les offres <i data-lucide="arrow-right"></i></a>
+      <a href="/resultats" class="btn btn-light link-arrow" style="margin-top:32px;width:fit-content">Voir les offres <i data-lucide="arrow-right"></i></a>
     </div>
   </section>
 
@@ -174,46 +140,3 @@
         <p>Oui, gratuitement jusqu'à 2 heures avant le début du cours. Passé ce délai, la place n'est plus remboursable.</p></details>
     </div>
   </section>
-
-  <!-- ============ FOOTER ============ -->
-  <footer class="footer">
-    <img src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?auto=format&fit=crop&w=2000&q=80" alt="" />
-    <div class="ft-overlay"></div>
-    <div class="ft-inner">
-      <div class="ft-grid">
-        <div class="ft-brand">
-          <a href="index.html" class="hdr-word" style="color:#fff">LASTFIT<span class="accent-dot">.</span></a>
-          <p>Le Too Good To Go du sport. On remplit les places vides — bon pour votre corps, bon pour votre budget.</p>
-          <div class="ft-social">
-            <a href="#"><i data-lucide="instagram"></i></a>
-            <a href="#"><i data-lucide="facebook"></i></a>
-            <a href="#"><i data-lucide="linkedin"></i></a>
-          </div>
-        </div>
-        <div><h4>Découvrir</h4><ul>
-          <li><a href="resultats.html?sport=Yoga">Yoga à Lyon</a></li>
-          <li><a href="resultats.html?sport=CrossFit">CrossFit</a></li>
-          <li><a href="resultats.html?sport=Pilates">Pilates</a></li>
-          <li><a href="resultats.html">Toutes les villes</a></li></ul></div>
-        <div><h4>Studios</h4><ul>
-          <li><a href="#">Devenir partenaire</a></li>
-          <li><a href="#">Espace pro</a></li>
-          <li><a href="#">Commission</a></li></ul></div>
-        <div><h4>Aide</h4><ul>
-          <li><a href="#faq">FAQ</a></li>
-          <li><a href="#">Contact</a></li>
-          <li><a href="#">CGU · CGV</a></li></ul></div>
-      </div>
-      <div class="ft-bottom">
-        <p>© 2026 LastFit — Tous droits réservés</p>
-        <p>Conçu pour les sportifs de dernière minute</p>
-      </div>
-    </div>
-  </footer>
-
-  <script src="assets/js/api.js"></script>
-  <script src="assets/js/components.js"></script>
-  <script src="assets/js/ui.js"></script>
-  <script src="assets/js/accueil.js"></script>
-</body>
-</html>

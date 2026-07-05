@@ -1,34 +1,3 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Rechercher un cours — LastFit</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/app.css">
-  <script src="https://unpkg.com/lucide@latest"></script>
-</head>
-<body>
-
-  <header id="site-header" class="solid-static">
-    <div class="hdr-inner">
-      <a href="index.html" class="hdr-word">LASTFIT<span class="accent-dot">.</span></a>
-      <nav class="hdr-nav uplabel">
-        <a href="index.html#offres" class="hdr-link">Offres</a>
-        <a href="resultats.html" class="hdr-link">Rechercher</a>
-        <a href="index.html#comment" class="hdr-link">Le principe</a>
-        <a href="index.html#faq" class="hdr-link">FAQ</a>
-      </nav>
-      <div class="hdr-actions">
-        <a href="#" class="hdr-pro uplabel">Inscrire ma salle</a>
-        <a href="connexion.html" class="hdr-login uplabel" data-auth-login>Se connecter</a>
-        <a href="mon-compte.html" class="hdr-login uplabel hidden" data-auth-account>Mon compte · <span data-auth-name></span></a>
-      </div>
-    </div>
-  </header>
-
   <main class="page">
     <div style="margin-bottom:24px">
       <span class="uplabel muted">Dernière minute</span>
@@ -88,10 +57,3 @@
       </aside>
     </div>
   </main>
-
-  <script src="assets/js/api.js"></script>
-  <script src="assets/js/components.js"></script>
-  <script src="assets/js/ui.js"></script>
-  <script src="assets/js/resultats.js"></script>
-</body>
-</html>

@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
       e.preventDefault();
       await api.logout();
       toast('Déconnecté.');
-      setTimeout(() => location.href = 'index.html', 500);
+      setTimeout(() => location.href = '/', 500);
     });
   }
 });

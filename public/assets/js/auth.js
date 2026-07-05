@@ -12,7 +12,7 @@ function clearFieldErrors() {
 }
 function redirectTarget() {
   const r = new URLSearchParams(location.search).get('redirect');
-  return r || 'mon-compte.html';
+  return r || '/mon-compte';
 }
 
 function initLogin() {
