@@ -1,0 +1,29 @@
+# ============================================================
+#  LastFit — .htaccess racine (déploiement robuste)
+# ------------------------------------------------------------
+#  Ce fichier rend le déploiement tolérant :
+#   - Si le document root pointe sur public/  -> ce fichier est
+#     au-dessus du docroot et IGNORÉ (c'est public/.htaccess qui agit).
+#   - Si le document root pointe sur la RACINE du projet -> ce
+#     fichier route tout vers public/ et protège le code.
+#  Résultat : tu peux uploader tout le projet dans www/ sans te
+#  soucier du réglage exact du dossier racine.
+# ============================================================
+
+Options -Indexes
+DirectoryIndex public/index.php index.php
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Sert directement les fichiers réels situés dans public/ (assets CSS/JS/images)
+    RewriteCond %{DOCUMENT_ROOT}/public%{REQUEST_URI} -f
+    RewriteRule ^ public%{REQUEST_URI} [L]
+
+    # Tout le reste passe par le front controller de public/
+    RewriteCond %{REQUEST_URI} !^/public/
+    RewriteRule ^ public/index.php [QSA,L]
+</IfModule>
+
+# Empêche l'accès web direct au code applicatif et aux données
+RedirectMatch 403 ^/(app|config|database|storage)(/|$)
