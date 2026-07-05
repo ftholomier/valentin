@@ -14,6 +14,9 @@ return [
     // Environnement : 'prod' sur le serveur, 'dev' en local.
     'app_env'   => 'prod',
 
+    // Clé d'accès au diagnostic /diag.php?k=... (mets une valeur à toi, longue et aléatoire).
+    'diag_key'  => 'change-moi-cle-secrete',
+
     // --- Base MySQL (Nuxit / mutualisé) ---
     'db_driver' => 'mysql',
     'db_host'   => 'sql.nuxit.net',   // hôte MySQL fourni par Nuxit (voir ton panel)

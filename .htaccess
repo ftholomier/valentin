@@ -1,13 +1,12 @@
 # ============================================================
-#  LastFit — .htaccess racine (déploiement robuste)
+#  LastFit — .htaccess racine (filet de sécurité)
 # ------------------------------------------------------------
-#  Ce fichier rend le déploiement tolérant :
-#   - Si le document root pointe sur public/  -> ce fichier est
-#     au-dessus du docroot et IGNORÉ (c'est public/.htaccess qui agit).
-#   - Si le document root pointe sur la RACINE du projet -> ce
-#     fichier route tout vers public/ et protège le code.
-#  Résultat : tu peux uploader tout le projet dans www/ sans te
-#  soucier du réglage exact du dossier racine.
+#  Configuration normale : le document root du domaine pointe
+#  sur public/ → ce fichier est au-dessus du docroot et IGNORÉ.
+#
+#  Si par erreur le domaine pointe sur la racine du projet,
+#  ce fichier route quand même tout vers public/ et bloque
+#  l'accès au code : le site reste fonctionnel et sécurisé.
 # ============================================================
 
 Options -Indexes
@@ -16,7 +15,10 @@ DirectoryIndex public/index.php index.php
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
-    # Sert directement les fichiers réels situés dans public/ (assets CSS/JS/images)
+    # Bloque l'accès web au code, à la config et aux données
+    RewriteRule ^(app|config|database|storage|design)(/|$) - [F,L]
+
+    # Sert les fichiers réels de public/ (assets, diag.php…)
     RewriteCond %{DOCUMENT_ROOT}/public%{REQUEST_URI} -f
     RewriteRule ^ public%{REQUEST_URI} [L]
 
@@ -25,5 +27,5 @@ DirectoryIndex public/index.php index.php
     RewriteRule ^ public/index.php [QSA,L]
 </IfModule>
 
-# Empêche l'accès web direct au code applicatif et aux données
-RedirectMatch 403 ^/(app|config|database|storage)(/|$)
+# Repli si mod_rewrite est absent
+RedirectMatch 403 ^/(app|config|database|storage|design)(/|$)

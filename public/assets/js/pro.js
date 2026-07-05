@@ -27,7 +27,7 @@ async function loadPro() {
         <span class="uplabel muted">Espace pro · ${escapeHtml(d.partner.ville)}</span>
         <h1 class="page-title">${escapeHtml(d.partner.nom)}</h1>
       </div>
-      <a href="#" id="logout-link" class="link-arrow uplabel" style="color:var(--ink)"><i data-lucide="log-out"></i> Déconnexion</a>
+      <a href="#" data-logout class="link-arrow uplabel" style="color:var(--ink)"><i data-lucide="log-out"></i> Déconnexion</a>
     </div>
 
     <div style="display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));margin-bottom:40px">
@@ -61,9 +61,6 @@ async function loadPro() {
 
   renderIcons();
   bindScan();
-  document.getElementById('logout-link').addEventListener('click', async (e) => {
-    e.preventDefault(); await api.logout(); location.href = '/';
-  });
 }
 
 function tile(value, label) {

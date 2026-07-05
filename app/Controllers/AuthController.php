@@ -24,8 +24,8 @@ class AuthController
         }
 
         Database::run(
-            'INSERT INTO users (role, nom, email, password_hash, ville) VALUES (?,?,?,?,?)',
-            ['sportif', $nom, $email, Auth::hash($pass), $ville]
+            'INSERT INTO users (role, nom, email, password_hash, ville, created_at) VALUES (?,?,?,?,?,?)',
+            ['sportif', $nom, $email, Auth::hash($pass), $ville, date('Y-m-d H:i:s')]
         );
         $id = (int) Database::lastId();
         Auth::login($id);

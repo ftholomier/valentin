@@ -37,7 +37,7 @@ function filterByDate(list, key) {
     const x = new Date(d.replace(' ', 'T'));
     return x.getFullYear() === ref.getFullYear() && x.getMonth() === ref.getMonth() && x.getDate() === ref.getDate();
   };
-  if (key === 'ce-soir') return list.filter((s) => sameDay(s.date_debut, now));
+  if (key === 'ce-soir' || key === 'aujourdhui') return list.filter((s) => sameDay(s.date_debut, now));
   if (key === 'demain') { const t = new Date(now); t.setDate(t.getDate() + 1); return list.filter((s) => sameDay(s.date_debut, t)); }
   if (key === 'week-end') return list.filter((s) => { const d = new Date(s.date_debut.replace(' ', 'T')).getDay(); return d === 0 || d === 6; });
   return list;

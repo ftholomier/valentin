@@ -62,38 +62,37 @@ foreach ($partners as $p) {
 }
 say(count($partnerIds) . ' salles insérées.', $isCli);
 
-// 4) Cours de ce soir (date_debut dynamique = aujourd'hui) -------------------
-$today = date('Y-m-d');
+// 4) Cours à venir (datés relativement à maintenant : toujours réservables) ---
 $img = fn($id) => "https://images.unsplash.com/photo-$id?auto=format&fit=crop&w=800&q=80";
 
 $slots = [
-    // [salle, sport, titre, coach, heure, durée, prix_initial, prix_reduit, total, restantes, image]
-    ['Studio Lumen', 'Yoga',     'Vinyasa Flow',        'Camille R.', '19:30', 60, 18, 8,  14, 5, '1544367567-0f2fcb009e0b'],
-    ['CrossBox 12',  'CrossFit', 'WOD du soir',         'Marco T.',   '18:00', 60, 20, 12, 16, 3, '1534438327276-14e5300c3a48'],
-    ['Coreo Pilates','Pilates',  'Pilates Reformer',    'Julie B.',   '20:15', 55, 26, 9,  8,  2, '1571902943202-507ec2618e8f'],
-    ['Ring Club',    'Boxe',     'Boxing Cardio',       'Sofiane K.', '18:45', 60, 22, 11, 12, 6, '1549719386-74dfcbf7dbed'],
-    ['Pulse Cycling','Cycling',  'Ride Nocturne',       'Ana P.',     '19:00', 45, 19, 10, 20, 8, '1518310383802-640c2de311b2'],
-    ['Studio Lumen', 'Yoga',     'Yin & Relaxation',    'Camille R.', '21:00', 60, 16, 7,  12, 4, '1552196563-55cd4e45efb3'],
-    ['CrossBox 12',  'HIIT',     'HIIT Express',        'Marco T.',   '19:45', 45, 18, 9,  15, 7, '1534258936925-c58bed479fcb'],
-    ['Coreo Pilates','Pilates',  'Reformer Débutant',   'Julie B.',   '18:30', 55, 24, 10, 8,  1, '1517836357463-d25dfeac3438'],
+    // [salle, sport, titre, coach, +minutes, durée, prix_initial, prix_reduit, total, restantes, image]
+    ['Studio Lumen', 'Yoga',     'Vinyasa Flow',        'Camille R.',  90, 60, 18, 8,  14, 5, '1544367567-0f2fcb009e0b'],
+    ['CrossBox 12',  'CrossFit', 'WOD du soir',         'Marco T.',    45, 60, 20, 12, 16, 3, '1534438327276-14e5300c3a48'],
+    ['Coreo Pilates','Pilates',  'Pilates Reformer',    'Julie B.',   150, 55, 26, 9,  8,  2, '1571902943202-507ec2618e8f'],
+    ['Ring Club',    'Boxe',     'Boxing Cardio',       'Sofiane K.',  60, 60, 22, 11, 12, 6, '1549719386-74dfcbf7dbed'],
+    ['Pulse Cycling','Cycling',  'Ride Nocturne',       'Ana P.',      75, 45, 19, 10, 20, 8, '1518310383802-640c2de311b2'],
+    ['Studio Lumen', 'Yoga',     'Yin & Relaxation',    'Camille R.', 180, 60, 16, 7,  12, 4, '1552196563-55cd4e45efb3'],
+    ['CrossBox 12',  'HIIT',     'HIIT Express',        'Marco T.',   105, 45, 18, 9,  15, 7, '1534258936925-c58bed479fcb'],
+    ['Coreo Pilates','Pilates',  'Reformer Débutant',   'Julie B.',    30, 55, 24, 10, 8,  1, '1517836357463-d25dfeac3438'],
 ];
 $stmt = 0;
 foreach ($slots as $s) {
-    [$salle, $sport, $titre, $coach, $heure, $duree, $pi, $pr, $tot, $rest, $imgId] = $s;
+    [$salle, $sport, $titre, $coach, $plusMin, $duree, $pi, $pr, $tot, $rest, $imgId] = $s;
     Database::run(
         'INSERT INTO slots
            (partner_id, sport, titre, coach, date_debut, duree_min, prix_initial, prix_reduit, places_totales, places_restantes, image_url, statut)
          VALUES (?,?,?,?,?,?,?,?,?,?,?,?)',
         [
             $partnerIds[$salle], $sport, $titre, $coach,
-            "$today $heure:00", $duree, $pi, $pr, $tot, $rest,
+            date('Y-m-d H:i:s', time() + $plusMin * 60), $duree, $pi, $pr, $tot, $rest,
             $img($imgId),
             $rest > 0 ? 'disponible' : 'complet',
         ]
     );
     $stmt++;
 }
-say("$stmt cours insérés (ce soir).", $isCli);
+say("$stmt cours insérés (à venir).", $isCli);
 
 // 5) Comptes de démo --------------------------------------------------------
 Database::run(

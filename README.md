@@ -29,6 +29,7 @@ valentin/
 ├── public/                     ← 🌐 DOCUMENT ROOT (seul dossier exposé)
 │   ├── index.php               Front controller unique (pages + /api)
 │   ├── .htaccess               Réécriture : tout vers index.php
+│   ├── diag.php                Diagnostic de déploiement (protégé par diag_key)
 │   └── assets/
 │       ├── css/app.css         Design system LastFit (CSS natif)
 │       └── js/                 api, components, ui + scripts de page
@@ -36,7 +37,7 @@ valentin/
 ├── app/                        ← Code applicatif (hors web)
 │   ├── bootstrap.php           Chargement config + classes
 │   ├── Core/                   Database, Response, Auth, Helpers
-│   ├── Controllers/            Config, Slots, Auth, Bookings, Payments
+│   ├── Controllers/            Config, Slots, Auth, Bookings, Payments, Pro, Health
 │   └── Views/                  Vues + partials (head, header, footer)
 │
 ├── config/                     ← Configuration (hors web)
@@ -49,6 +50,7 @@ valentin/
 │   ├── install.php             Installateur + jeu de démo (CLI)
 │   └── lastfit_mysql.sql       ⬇️ Dump MySQL (schéma + données)
 │
+├── storage/sessions/           ← Sessions PHP (hors web, doit être INSCRIPTIBLE : chmod 775)
 ├── design/reference-lastfit.html   Maquette validée d'origine
 ├── router.php                  Serveur PHP intégré (dev uniquement)
 └── README.md
@@ -113,19 +115,25 @@ php database/install.php                       # crée + peuple la base de démo
 php -S localhost:8000 -t public router.php     # http://localhost:8000
 ```
 
-**Comptes de démo** (mot de passe `demo1234`) : `lea@demo.fr` (sportif), `pro@demo.fr`, `admin@demo.fr`.
+**Comptes de démo dev** (mot de passe `demo1234`) : `lea@demo.fr` (sportif), `pro@demo.fr` (salle), `admin@demo.fr` (dev uniquement).
 **Cartes de test** : `4242 4242 4242 4242` = accepté · `4000 0000 0000 0002` = refusé.
+
+> Le dump MySQL de prod ne contient **que** `lea@demo.fr` et `pro@demo.fr` (pas de compte admin).
+> Avant ouverture au public : `DELETE FROM users WHERE email LIKE '%@demo.fr';`
 
 ---
 
 ## 🌐 Déploiement sur Nuxit (mutualisé, MySQL)
 
-1. **FTP** : uploader tout le projet.
+1. **FTP** : uploader tout le projet (activer *« Forcer l'affichage des fichiers cachés »* dans
+   FileZilla pour que les `.htaccess` partent bien).
 2. **Document root** : dans le panel Nuxit, faire pointer le domaine sur le dossier **`public/`**.
-3. **Base MySQL** : créer une base dans le panel, puis **importer `database/lastfit_mysql.sql`** (phpMyAdmin).
-4. **Config serveur** : copier `config/config.local.example.php` → `config/config.local.php`,
-   renseigner l'hôte/base/user/pass MySQL Nuxit, et `app_env => 'prod'`.
-5. `mod_rewrite` est actif chez Nuxit → les URLs `/api/...` et les pages propres fonctionnent.
+3. **Permissions** : `chmod 775` sur `storage/` **et** `storage/sessions/` (clic droit → droits d'accès dans FileZilla).
+4. **Base MySQL** : créer une base dans le panel, puis **importer `database/lastfit_mysql.sql`** (phpMyAdmin).
+5. **Config serveur** : copier `config/config.local.example.php` → `config/config.local.php`,
+   renseigner l'hôte/base/user/pass MySQL Nuxit, `app_env => 'prod'` et une `diag_key` à toi.
+6. **Vérifier** : ouvrir `https://ton-domaine/diag.php?k=TA_DIAG_KEY` → toutes les lignes `[ OK ]`,
+   puis `https://ton-domaine/api/health` → JSON avec `db_connectee: true`.
 
 > ⚠️ **GitHub Pages ne peut pas héberger ce projet** (PHP + base SQL requis).
 
@@ -136,10 +144,15 @@ php -S localhost:8000 -t public router.php     # http://localhost:8000
 - **Code, config et données hors du webroot** (seul `public/` est exposé) → non téléchargeables.
 - Requêtes **PDO préparées** partout (anti-injection SQL).
 - Mots de passe **hashés** (`password_hash`/bcrypt).
-- **Sessions** HttpOnly + `SameSite=Lax` + régénération d'ID à la connexion.
-- Secrets **hors dépôt** (`config.local.php` git-ignoré).
-- Sortie échappée côté client (`escapeHtml`) et serveur (`htmlspecialchars`).
-- Réservation **atomique** (UPDATE conditionnel) → pas de survente.
+- **Sessions** HttpOnly + `SameSite=Lax` + régénération d'ID à la connexion,
+  stockées dans `storage/sessions` (dossier dédié inscriptible).
+- Secrets **hors dépôt** (`config.local.php` git-ignoré) ; `diag.php` protégé par `diag_key`.
+- Sortie échappée côté client (`escapeHtml`) et serveur (`htmlspecialchars`) ;
+  redirections post-login restreintes aux chemins internes (anti open-redirect).
+- Réservation **atomique** (UPDATE conditionnel) → pas de survente ; paiement et
+  validation QR en **compare-and-set** (pas de double paiement / double entrée) ;
+  réservations non payées **expirées après 15 min** (place restituée) ;
+  un seul billet actif par utilisateur et par cours ; cours passés non réservables.
 
 ---
 

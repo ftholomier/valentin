@@ -2,6 +2,60 @@
 /** Réservations flash : création (avec réservation d'une place), historique, validation QR. */
 class BookingsController
 {
+    /** Durée de vie d'une réservation non payée avant libération de la place (minutes). */
+    private const PENDING_TTL_MIN = 15;
+
+    /**
+     * Libère les places des réservations "en_attente" abandonnées (plus vieilles
+     * que PENDING_TTL_MIN). Appelé avant les lectures/écritures sensibles pour
+     * que le stock reste juste sans dépendre d'un cron.
+     */
+    public static function expireStale(): void
+    {
+        $cutoff = date('Y-m-d H:i:s', time() - self::PENDING_TTL_MIN * 60);
+        $stale  = Database::all(
+            "SELECT id, slot_id FROM bookings
+             WHERE statut_paiement = 'en_attente' AND created_at < ?",
+            [$cutoff]
+        );
+        foreach ($stale as $b) {
+            self::cancelPending((int) $b['id'], (int) $b['slot_id']);
+        }
+    }
+
+    /**
+     * Annule une réservation "en_attente" et restitue sa place, de façon atomique.
+     * Retourne true si l'annulation a bien eu lieu (false si déjà traitée ailleurs).
+     */
+    public static function cancelPending(int $bookingId, int $slotId): bool
+    {
+        Database::begin();
+        try {
+            // CAS : ne s'annule que si toujours en attente (évite les doubles restitutions).
+            $upd = Database::run(
+                "UPDATE bookings SET statut_paiement = 'annule'
+                 WHERE id = ? AND statut_paiement = 'en_attente'",
+                [$bookingId]
+            );
+            if ($upd->rowCount() === 1) {
+                Database::run(
+                    "UPDATE slots
+                     SET places_restantes = places_restantes + 1,
+                         statut = CASE WHEN statut = 'complet' THEN 'disponible' ELSE statut END
+                     WHERE id = ? AND places_restantes < places_totales",
+                    [$slotId]
+                );
+                Database::commit();
+                return true;
+            }
+            Database::commit();
+            return false;
+        } catch (Throwable $e) {
+            Database::rollback();
+            throw $e;
+        }
+    }
+
     /**
      * POST /api/bookings  { slot_id }
      * Réserve une place de façon atomique et crée une réservation en attente de paiement.
@@ -15,6 +69,8 @@ class BookingsController
             Response::error('Cours non précisé.', 422);
         }
 
+        self::expireStale();
+
         Database::begin();
         try {
             $slot = Database::one('SELECT * FROM slots WHERE id = ?', [$slotId]);
@@ -22,9 +78,22 @@ class BookingsController
                 Database::rollback();
                 Response::error('Cours introuvable.', 404);
             }
-            if ($slot['statut'] === 'termine') {
+            if ($slot['statut'] === 'termine' || strtotime($slot['date_debut']) <= time()) {
                 Database::rollback();
-                Response::error('Ce cours est terminé.', 409);
+                Response::error('Ce cours est déjà passé.', 409);
+            }
+
+            // Un seul billet actif par utilisateur et par cours.
+            $existing = Database::one(
+                "SELECT id FROM bookings
+                 WHERE user_id = ? AND slot_id = ? AND statut_paiement IN ('en_attente','paye')",
+                [$user['id'], $slotId]
+            );
+            if ($existing) {
+                Database::rollback();
+                Response::error('Vous avez déjà une réservation pour ce cours.', 409, [
+                    'booking_id' => (int) $existing['id'],
+                ]);
             }
 
             // Réservation atomique de la place : ne passe que s'il en reste.
@@ -45,16 +114,16 @@ class BookingsController
                 [$slotId]
             );
 
-            // Ventilation commission / part salle.
+            // Ventilation commission / part salle, figée au moment de la réservation.
             $montant = (float) $slot['prix_reduit'];
             $rate    = ConfigController::commissionRate();
             $split   = Helpers::splitCommission($montant, $rate);
 
             Database::run(
                 'INSERT INTO bookings
-                    (user_id, slot_id, statut_paiement, montant_paye, commission, montant_salle)
-                 VALUES (?,?,?,?,?,?)',
-                [$user['id'], $slotId, 'en_attente', 0, $split['commission'], $split['montant_salle']]
+                    (user_id, slot_id, statut_paiement, montant_paye, commission, montant_salle, created_at)
+                 VALUES (?,?,?,?,?,?,?)',
+                [$user['id'], $slotId, 'en_attente', 0, $split['commission'], $split['montant_salle'], date('Y-m-d H:i:s')]
             );
             $bookingId = (int) Database::lastId();
 
@@ -148,10 +217,15 @@ class BookingsController
             Response::error('Billet non payé — entrée refusée.', 402);
         }
 
-        Database::run(
-            "UPDATE bookings SET statut_paiement = 'valide', validated_at = ? WHERE id = ?",
+        // CAS atomique : deux scans simultanés du même billet → un seul passe.
+        $upd = Database::run(
+            "UPDATE bookings SET statut_paiement = 'valide', validated_at = ?
+             WHERE id = ? AND statut_paiement = 'paye'",
             [date('Y-m-d H:i:s'), $booking['id']]
         );
+        if ($upd->rowCount() !== 1) {
+            Response::error('Ce billet a déjà été validé.', 409);
+        }
 
         Response::ok([
             'client'     => $booking['client'],

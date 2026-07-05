@@ -73,8 +73,10 @@ class Database
     public static function commit(): void { self::pdo()->commit(); }
     public static function rollback(): void
     {
-        if (self::pdo()->inTransaction()) {
-            self::pdo()->rollBack();
+        // N'utilise PAS pdo() : si la connexion initiale a échoué, retenter la
+        // connexion dans un bloc catch masquerait l'erreur d'origine (500 vide).
+        if (self::$pdo instanceof PDO && self::$pdo->inTransaction()) {
+            self::$pdo->rollBack();
         }
     }
 }

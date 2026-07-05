@@ -9,7 +9,7 @@
       <a href="/#faq" class="hdr-link">FAQ</a>
     </nav>
     <div class="hdr-actions">
-      <a href="#" class="hdr-pro uplabel">Inscrire ma salle</a>
+      <a href="/pro" class="hdr-pro uplabel">Inscrire ma salle</a>
       <a href="/connexion" class="hdr-login uplabel" data-auth-login>Se connecter</a>
       <a href="/mon-compte" class="hdr-login uplabel hidden" data-auth-account>Mon compte · <span data-auth-name></span></a>
     </div>

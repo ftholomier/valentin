@@ -20,7 +20,7 @@ CREATE TABLE users (
     password_hash TEXT NOT NULL,
     ville         TEXT,
     partner_id    INTEGER,                              -- si role=partner : salle rattachée
-    created_at    TEXT NOT NULL DEFAULT (datetime('now'))
+    created_at    TEXT NOT NULL DEFAULT (datetime('now','localtime'))
 );
 
 -- ---------- Établissements / Salles ----------
@@ -35,7 +35,7 @@ CREATE TABLE partners (
     equipements TEXT,                                   -- liste séparée par des virgules
     note        REAL DEFAULT 5.0,
     statut      TEXT NOT NULL DEFAULT 'actif',          -- actif | inactif
-    created_at  TEXT NOT NULL DEFAULT (datetime('now'))
+    created_at  TEXT NOT NULL DEFAULT (datetime('now','localtime'))
 );
 
 -- ---------- Cours / Créneaux ----------
@@ -53,7 +53,7 @@ CREATE TABLE slots (
     places_restantes INTEGER NOT NULL DEFAULT 10,
     image_url        TEXT,
     statut           TEXT NOT NULL DEFAULT 'disponible', -- disponible | complet | termine
-    created_at       TEXT NOT NULL DEFAULT (datetime('now')),
+    created_at       TEXT NOT NULL DEFAULT (datetime('now','localtime')),
     FOREIGN KEY (partner_id) REFERENCES partners(id) ON DELETE CASCADE
 );
 
@@ -67,7 +67,7 @@ CREATE TABLE bookings (
     montant_paye    REAL NOT NULL DEFAULT 0,
     commission      REAL NOT NULL DEFAULT 0,
     montant_salle   REAL NOT NULL DEFAULT 0,
-    created_at      TEXT NOT NULL DEFAULT (datetime('now')),
+    created_at      TEXT NOT NULL DEFAULT (datetime('now','localtime')),
     validated_at    TEXT,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (slot_id) REFERENCES slots(id) ON DELETE CASCADE

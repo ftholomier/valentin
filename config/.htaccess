@@ -1,3 +1,7 @@
-# Aucun accès web au code PHP applicatif.
-Require all denied
-Deny from all
+# Aucun accès web direct (compatible Apache 2.2 et 2.4)
+<IfModule mod_authz_core.c>
+    Require all denied
+</IfModule>
+<IfModule !mod_authz_core.c>
+    Deny from all
+</IfModule>

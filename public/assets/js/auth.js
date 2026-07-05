@@ -12,8 +12,12 @@ function clearFieldErrors() {
 }
 function redirectTarget(user) {
   let r = new URLSearchParams(location.search).get('redirect');
-  // Garde anti-boucle : on ne redirige jamais vers les pages d'authentification.
-  if (r && (r.startsWith('/connexion') || r.startsWith('/inscription'))) r = null;
+  // Sécurité : uniquement des chemins internes ("/…" mais pas "//hote" ni
+  // "javascript:" ni URL absolue) et jamais les pages d'auth (anti-boucle).
+  if (!r || !r.startsWith('/') || r.startsWith('//')
+      || r.startsWith('/connexion') || r.startsWith('/inscription')) {
+    r = null;
+  }
   if (r) return r;
   // Redirection par rôle : les salles vont vers l'espace pro.
   if (user && user.role === 'partner') return '/pro';

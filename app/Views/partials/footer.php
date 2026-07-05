@@ -19,8 +19,8 @@
           <li><a href="/resultats?sport=Pilates">Pilates</a></li>
           <li><a href="/resultats">Toutes les villes</a></li></ul></div>
         <div><h4>Studios</h4><ul>
-          <li><a href="#">Devenir partenaire</a></li>
-          <li><a href="#">Espace pro</a></li>
+          <li><a href="/pro">Devenir partenaire</a></li>
+          <li><a href="/pro">Espace pro</a></li>
           <li><a href="#">Commission</a></li></ul></div>
         <div><h4>Aide</h4><ul>
           <li><a href="/#faq">FAQ</a></li>

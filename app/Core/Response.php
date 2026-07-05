@@ -30,6 +30,14 @@ class Response
             return $_POST ?: [];
         }
         $decoded = json_decode($raw, true);
-        return is_array($decoded) ? $decoded : [];
+        if (is_array($decoded)) {
+            return $decoded;
+        }
+        // Repli formulaire classique (urlencoded / multipart).
+        if (!empty($_POST)) {
+            return $_POST;
+        }
+        parse_str($raw, $parsed);
+        return is_array($parsed) ? $parsed : [];
     }
 }

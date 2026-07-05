@@ -15,6 +15,9 @@ class PaymentsController
         $bookingId = (int) ($b['booking_id'] ?? 0);
         $card      = preg_replace('/\s+/', '', (string) ($b['card'] ?? ''));
 
+        // Libère les réservations abandonnées avant de traiter le paiement.
+        BookingsController::expireStale();
+
         $booking = Database::one(
             'SELECT * FROM bookings WHERE id = ? AND user_id = ?',
             [$bookingId, $user['id']]
@@ -26,26 +29,29 @@ class PaymentsController
             Response::error('Cette réservation est déjà payée.', 409);
         }
         if ($booking['statut_paiement'] !== 'en_attente') {
-            Response::error('Réservation non payable.', 409);
+            Response::error('Réservation expirée ou annulée — merci de réserver à nouveau.', 409);
         }
 
         // --- Simulation du refus (numéro de test façon Stripe) ---
         if ($card !== '' && $card === STRIPE_TEST_DECLINE) {
-            self::releaseSeat((int) $booking['slot_id'], $bookingId);
+            BookingsController::cancelPending($bookingId, (int) $booking['slot_id']);
             Response::error('Paiement refusé par la banque (carte de test).', 402);
         }
 
-        // --- Paiement accepté : on finalise ---
-        $slot    = Database::one('SELECT prix_reduit FROM slots WHERE id = ?', [$booking['slot_id']]);
-        $montant = $slot ? (float) $slot['prix_reduit'] : (float) $booking['montant_paye'];
+        // --- Paiement accepté : montant FIGÉ à la réservation (commission + part salle) ---
+        $montant = round((float) $booking['commission'] + (float) $booking['montant_salle'], 2);
         $token   = Helpers::qrToken();
 
-        Database::run(
+        // CAS atomique : deux paiements simultanés du même billet → un seul passe.
+        $upd = Database::run(
             "UPDATE bookings
              SET statut_paiement = 'paye', montant_paye = ?, qr_token = ?
-             WHERE id = ?",
+             WHERE id = ? AND statut_paiement = 'en_attente'",
             [$montant, $token, $bookingId]
         );
+        if ($upd->rowCount() !== 1) {
+            Response::error("Cette réservation vient déjà d'être payée.", 409);
+        }
 
         Response::ok([
             'booking_id'      => $bookingId,
@@ -54,27 +60,5 @@ class PaymentsController
             'qr_token'        => $token,
             'transaction_id'  => 'sim_' . strtoupper(bin2hex(random_bytes(6))),
         ], 'Paiement accepté.');
-    }
-
-    /** Libère la place et annule la réservation (paiement échoué/abandonné). */
-    private static function releaseSeat(int $slotId, int $bookingId): void
-    {
-        Database::begin();
-        try {
-            Database::run(
-                "UPDATE slots SET places_restantes = places_restantes + 1,
-                        statut = CASE WHEN statut = 'complet' THEN 'disponible' ELSE statut END
-                 WHERE id = ?",
-                [$slotId]
-            );
-            Database::run(
-                "UPDATE bookings SET statut_paiement = 'annule' WHERE id = ?",
-                [$bookingId]
-            );
-            Database::commit();
-        } catch (Throwable $e) {
-            Database::rollback();
-            throw $e;
-        }
     }
 }

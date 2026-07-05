@@ -30,7 +30,7 @@ async function loadAccount() {
         <span class="uplabel muted">Espace sportif</span>
         <h1 class="page-title">Bonjour, ${escapeHtml(user.nom.split(' ')[0])} 👋</h1>
       </div>
-      <a href="#" id="logout-link" class="link-arrow uplabel" style="color:var(--ink)"><i data-lucide="log-out"></i> Déconnexion</a>
+      <a href="#" data-logout class="link-arrow uplabel" style="color:var(--ink)"><i data-lucide="log-out"></i> Déconnexion</a>
     </div>
 
     <div style="display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));margin-bottom:40px">
@@ -51,15 +51,6 @@ async function loadAccount() {
     list.innerHTML = bookings.map(bookingCardHTML).join('');
   }
   renderIcons();
-
-  const logout = document.getElementById('logout-link');
-  if (logout) {
-    logout.addEventListener('click', async (e) => {
-      e.preventDefault();
-      await api.logout();
-      location.href = '/';
-    });
-  }
 }
 
 function statTile(value, label) {

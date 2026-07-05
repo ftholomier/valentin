@@ -19,6 +19,7 @@
         <select id="f-date">
           <option value="">Tout</option>
           <option value="ce-soir">Ce soir</option>
+          <option value="aujourdhui">Aujourd'hui</option>
           <option value="demain">Demain</option>
           <option value="week-end">Week-end</option>
         </select>

@@ -9,8 +9,12 @@ class SlotsController
      */
     public static function index(): void
     {
-        $where  = ["s.statut != 'termine'"];
-        $params = [];
+        // Restitue les places des réservations abandonnées avant de lister.
+        BookingsController::expireStale();
+
+        // Uniquement les cours à venir (comparaison portable SQLite/MySQL via PHP).
+        $where  = ["s.statut != 'termine'", 's.date_debut >= ?'];
+        $params = [date('Y-m-d H:i:s')];
 
         if (!empty($_GET['ville'])) {
             $where[]  = 'p.ville = ?';
@@ -51,6 +55,8 @@ class SlotsController
     /** GET /api/slots/{id} */
     public static function show(int $id): void
     {
+        BookingsController::expireStale();
+
         $row = Database::one(
             'SELECT s.*, p.nom AS salle, p.description AS salle_description, p.ville,
                     p.adresse, p.lat, p.lng, p.equipements, p.note

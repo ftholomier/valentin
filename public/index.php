@@ -4,7 +4,7 @@
  * - Sert les pages (vues HTML avec header/footer partagés)
  * - Route les requêtes /api/* vers les contrôleurs (réponses JSON)
  *
- * Le document root de l'hébergeur doit pointer sur ce dossier `public/`.
+ * Le document root du domaine pointe sur ce dossier public/.
  */
 declare(strict_types=1);
 
@@ -105,7 +105,11 @@ function dispatch_api(string $method, string $path): void
                 Response::error("Route introuvable : $method $path", 404);
         }
     } catch (Throwable $e) {
-        Database::rollback();
+        try {
+            Database::rollback();
+        } catch (Throwable $ignored) {
+            // On garantit la réponse JSON même si le rollback échoue.
+        }
         Response::error(APP_ENV === 'dev' ? $e->getMessage() : 'Erreur serveur.', 500);
     }
 }

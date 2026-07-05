@@ -16,11 +16,14 @@ class ProController
             Response::error('Salle introuvable.', 404);
         }
 
-        // Cours de la salle avec places vendues, billets et CA (part salle).
+        // Restitue d'abord les places des réservations abandonnées.
+        BookingsController::expireStale();
+
+        // Cours de la salle : les "vendus" sont les billets réellement payés/validés
+        // (pas le différentiel de places, faussé par le seed et les paniers en attente).
         $slots = Database::all(
             "SELECT s.id, s.sport, s.titre, s.coach, s.date_debut, s.duree_min,
                     s.prix_reduit, s.places_totales, s.places_restantes, s.statut,
-                    (s.places_totales - s.places_restantes) AS vendus,
                     (SELECT COUNT(*) FROM bookings b
                        WHERE b.slot_id = s.id AND b.statut_paiement IN ('paye','valide')) AS billets,
                     (SELECT COUNT(*) FROM bookings b
@@ -41,7 +44,7 @@ class ProController
             if ($isToday) {
                 $coursJour++;
                 $placesJour  += (int) $s['places_totales'];
-                $venduesJour += (int) $s['vendus'];
+                $venduesJour += (int) $s['billets'];
             }
             $slotsOut[] = [
                 'id'               => (int) $s['id'],
@@ -53,7 +56,7 @@ class ProController
                 'prix_reduit'      => (float) $s['prix_reduit'],
                 'places_totales'   => (int) $s['places_totales'],
                 'places_restantes' => (int) $s['places_restantes'],
-                'vendus'           => (int) $s['vendus'],
+                'vendus'           => (int) $s['billets'],
                 'billets'          => (int) $s['billets'],
                 'valides'          => (int) $s['valides'],
                 'ca_salle'         => (float) $s['ca_salle'],
@@ -73,7 +76,14 @@ class ProController
         );
 
         Response::ok([
-            'partner' => $partner,
+            // Casts explicites : PDO MySQL renvoie les DECIMAL en string.
+            'partner' => [
+                'id'      => (int) $partner['id'],
+                'nom'     => $partner['nom'],
+                'ville'   => $partner['ville'],
+                'adresse' => $partner['adresse'],
+                'note'    => (float) $partner['note'],
+            ],
             'stats'   => [
                 'cours_jour'        => $coursJour,
                 'places_jour'       => $placesJour,

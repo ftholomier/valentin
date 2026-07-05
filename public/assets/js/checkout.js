@@ -78,6 +78,10 @@ async function initCheckout() {
   });
 }
 
+// Réservation en cours de paiement : réutilisée entre deux tentatives pour ne
+// pas décompter une nouvelle place à chaque re-clic sur « Payer ».
+let PENDING_BOOKING_ID = null;
+
 async function pay(card) {
   const btn = document.getElementById('pay-btn');
   const alertBox = document.getElementById('pay-alert');
@@ -85,12 +89,21 @@ async function pay(card) {
   btn.disabled = true; btn.textContent = 'Paiement en cours…';
 
   try {
-    // 1) Réserver la place (crée la réservation en attente)
-    const booking = await api.book(CURRENT_SLOT.id);
+    // 1) Réserver la place (une seule fois, même après un échec de paiement)
+    if (PENDING_BOOKING_ID === null) {
+      const booking = await api.book(CURRENT_SLOT.id);
+      PENDING_BOOKING_ID = booking.booking_id;
+    }
     // 2) Payer (simulation Stripe) -> génère le QR
-    const result = await api.checkout({ booking_id: booking.booking_id, card });
+    const result = await api.checkout({ booking_id: PENDING_BOOKING_ID, card });
+    PENDING_BOOKING_ID = null;
     showTicket(result);
   } catch (e) {
+    // 402 = carte refusée (place libérée côté serveur), 404/409 = réservation
+    // plus payable : dans ces cas la prochaine tentative doit re-réserver.
+    if (e.status === 402 || e.status === 404 || e.status === 409) {
+      PENDING_BOOKING_ID = null;
+    }
     alertBox.innerHTML = `<div class="alert alert-error">${escapeHtml(e.message)}</div>`;
     btn.disabled = false;
     btn.innerHTML = `Payer ${fmt.euro(CURRENT_SLOT.prix_reduit)} <i data-lucide="lock"></i>`;

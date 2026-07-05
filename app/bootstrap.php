@@ -5,6 +5,9 @@
  */
 declare(strict_types=1);
 
+// Fuseau horaire unique pour tous les horodatages PHP (indépendant du php.ini hébergeur).
+date_default_timezone_set('Europe/Paris');
+
 define('APP_ROOT', dirname(__DIR__));
 define('VIEWS_PATH', APP_ROOT . '/app/Views');
 

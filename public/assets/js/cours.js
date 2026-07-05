@@ -97,14 +97,10 @@ function startCourseCountdown() {
   tick();
 }
 
-async function reserve(slotId) {
-  const user = window.__user;
-  const target = `/checkout?slot=${slotId}`;
-  if (!user) {
-    location.href = `/connexion?redirect=${encodeURIComponent(target)}`;
-    return;
-  }
-  location.href = target;
+function reserve(slotId) {
+  // Navigation directe : checkout.js re-vérifie la session et redirige lui-même
+  // vers /connexion si besoin (évite la course condition sur window.__user).
+  location.href = `/checkout?slot=${slotId}`;
 }
 
 document.addEventListener('DOMContentLoaded', loadCourse);

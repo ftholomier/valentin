@@ -30,18 +30,16 @@ class HealthController
               || (($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https')
               || (int) ($_SERVER['SERVER_PORT'] ?? 0) === 443;
 
+        // Pas de chemin absolu ni de version exacte : rien d'exploitable en public.
         Response::ok([
             'app'                   => APP_NAME,
             'app_version'           => APP_VERSION,
             'env'                   => APP_ENV,
-            'php'                   => PHP_VERSION,
+            'php'                   => PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION,
             'https_detecte'         => $https,
-            'db_driver'             => DB_DRIVER,
             'db_connectee'          => $dbOk,
             'db_erreur'             => APP_ENV === 'dev' ? $dbErr : ($dbOk ? null : 'connexion impossible'),
             'session_ecriture'      => $sessionWrite,
-            'session_id_present'    => session_id() !== '',
-            'session_dossier'       => $savePath,
             'session_dossier_ok'    => $savePath ? is_writable($savePath) : false,
             'utilisateur_connecte'  => Auth::check(),
         ]);

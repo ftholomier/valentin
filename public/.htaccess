@@ -1,5 +1,5 @@
 # ============================================================
-#  LastFit — dossier public (document root)
+#  LastFit — dossier public (document root du domaine)
 # ============================================================
 DirectoryIndex index.php
 Options -Indexes
@@ -7,7 +7,7 @@ Options -Indexes
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
-    # Sert directement les fichiers/dossiers réels (assets CSS/JS/images)
+    # Sert directement les fichiers/dossiers réels (assets, diag.php…)
     RewriteCond %{REQUEST_FILENAME} -f [OR]
     RewriteCond %{REQUEST_FILENAME} -d
     RewriteRule ^ - [L]

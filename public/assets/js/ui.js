@@ -62,14 +62,13 @@ document.addEventListener('DOMContentLoaded', () => {
   renderIcons();
   initHeaderScroll();
   refreshAuthUI();
+});
 
-  const logoutBtn = document.querySelector('[data-logout]');
-  if (logoutBtn) {
-    logoutBtn.addEventListener('click', async (e) => {
-      e.preventDefault();
-      await api.logout();
-      toast('Déconnecté.');
-      setTimeout(() => location.href = '/', 500);
-    });
-  }
+/* Déconnexion par délégation : fonctionne aussi sur les liens créés dynamiquement. */
+document.addEventListener('click', async (e) => {
+  const btn = e.target.closest('[data-logout]');
+  if (!btn) return;
+  e.preventDefault();
+  await api.logout();
+  location.href = '/';
 });
