@@ -1,0 +1,12 @@
+# Base SQLite générée (régénérable via database/install.php)
+database/*.sqlite
+database/*.sqlite-wal
+database/*.sqlite-shm
+
+# Dépendances / logs éventuels
+node_modules/
+*.log
+.DS_Store
+
+# Réglages locaux Claude Code
+.claude/settings.local.json

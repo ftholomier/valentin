@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rechercher un cours — LastFit</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/app.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+  <header id="site-header" class="solid-static">
+    <div class="hdr-inner">
+      <a href="index.html" class="hdr-word">LASTFIT<span class="accent-dot">.</span></a>
+      <nav class="hdr-nav uplabel">
+        <a href="index.html#offres" class="hdr-link">Offres</a>
+        <a href="resultats.html" class="hdr-link">Rechercher</a>
+        <a href="index.html#comment" class="hdr-link">Le principe</a>
+        <a href="index.html#faq" class="hdr-link">FAQ</a>
+      </nav>
+      <div class="hdr-actions">
+        <a href="#" class="hdr-pro uplabel">Inscrire ma salle</a>
+        <a href="connexion.html" class="hdr-login uplabel" data-auth-login>Se connecter</a>
+        <a href="mon-compte.html" class="hdr-login uplabel hidden" data-auth-account>Mon compte · <span data-auth-name></span></a>
+      </div>
+    </div>
+  </header>
+
+  <main class="page">
+    <div style="margin-bottom:24px">
+      <span class="uplabel muted">Dernière minute</span>
+      <h1 class="page-title" id="results-title">Cours disponibles</h1>
+    </div>
+
+    <!-- Filtres (client-side JS) -->
+    <div class="filters">
+      <div class="filter">
+        <label>Ville</label>
+        <select id="f-ville"><option value="">Toutes</option></select>
+      </div>
+      <div class="filter">
+        <label>Discipline</label>
+        <select id="f-sport"><option value="">Toutes</option></select>
+      </div>
+      <div class="filter">
+        <label>Quand</label>
+        <select id="f-date">
+          <option value="">Tout</option>
+          <option value="ce-soir">Ce soir</option>
+          <option value="demain">Demain</option>
+          <option value="week-end">Week-end</option>
+        </select>
+      </div>
+      <div class="filter">
+        <label>Prix max</label>
+        <input id="f-prix" type="number" min="0" placeholder="€" style="width:90px" />
+      </div>
+      <div class="filter">
+        <label>Trier par</label>
+        <select id="f-tri">
+          <option value="distance">Distance</option>
+          <option value="prix">Prix croissant</option>
+          <option value="places">Places restantes</option>
+          <option value="heure">Heure</option>
+        </select>
+      </div>
+      <div class="filter">
+        <label>&nbsp;</label>
+        <label style="display:flex;align-items:center;gap:8px;border:1px solid var(--line);padding:9px 12px;cursor:pointer;font-size:14px">
+          <input id="f-dispo" type="checkbox" style="width:auto" /> Places dispo
+        </label>
+      </div>
+    </div>
+
+    <div class="results-layout">
+      <div>
+        <p class="uplabel muted" id="results-count" style="margin-bottom:16px">—</p>
+        <div class="results-list" id="results-list">
+          <div class="loading-wrap"><span class="spinner"></span><p style="margin-top:12px">Recherche…</p></div>
+        </div>
+      </div>
+      <aside class="map-panel">
+        <iframe id="map-frame" title="Carte" loading="lazy"
+          src="https://www.openstreetmap.org/export/embed.html?bbox=4.79%2C45.74%2C4.89%2C45.78&layer=mapnik&marker=45.764%2C4.8357"></iframe>
+      </aside>
+    </div>
+  </main>
+
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/components.js"></script>
+  <script src="assets/js/ui.js"></script>
+  <script src="assets/js/resultats.js"></script>
+</body>
+</html>

@@ -1,414 +1,219 @@
 <!DOCTYPE html>
-<html lang="fr" class="scroll-smooth">
+<html lang="fr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>LastFit — Bougez plus. Payez moins.</title>
   <meta name="description" content="Le sport de dernière minute. Les places invendues des plus beaux studios, près de chez vous, jusqu'à -70%." />
 
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/lucide@latest"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            display: ['Archivo', 'sans-serif'],
-            sans: ['Inter', 'sans-serif'],
-          },
-          fontWeight: { 500:'500', 600:'600', 700:'700', 800:'800', 900:'900' },
-          colors: {
-            ink:   { DEFAULT:'#141414', soft:'#5C5C5C', mute:'#9A9A97' },
-            line:  '#E7E7E3',
-            accent:'#C7F04A',
-          },
-          letterSpacing: { tightest:'-0.045em', tighter:'-0.03em' },
-        },
-      },
-    };
-  </script>
-  <style>
-    body { font-family:'Inter',sans-serif; color:#141414; background:#fff; }
-    h1,h2,h3 { font-family:'Archivo',sans-serif; letter-spacing:-0.03em; }
-    .no-scrollbar::-webkit-scrollbar{ display:none; }
-    .no-scrollbar{ -ms-overflow-style:none; scrollbar-width:none; }
-    .tnum{ font-variant-numeric:tabular-nums; }
-    .uplabel{ text-transform:uppercase; letter-spacing:.18em; font-size:11px; font-weight:600; }
-    ::selection{ background:#C7F04A; color:#141414; }
-    .link-arrow{ display:inline-flex; align-items:center; gap:.5rem; }
-    .link-arrow svg{ transition:transform .25s ease; }
-    .link-arrow:hover svg{ transform:translateX(4px); }
-
-    /* Header transparent -> solide au scroll */
-    #site-header{ transition:background-color .3s ease, border-color .3s ease, color .3s ease; }
-    #site-header .hdr-word{ color:#fff; }
-    #site-header .hdr-link{ color:rgba(255,255,255,.85); }
-    #site-header .hdr-link:hover{ color:#fff; }
-    #site-header .hdr-login{ color:#fff; border:1px solid rgba(255,255,255,.45); background:transparent; }
-    #site-header .hdr-login:hover{ background:#fff; color:#141414; }
-    #site-header .hdr-menu{ color:#fff; }
-
-    #site-header.is-solid{ background:rgba(255,255,255,.92); backdrop-filter:blur(8px); border-bottom:1px solid #E7E7E3; }
-    #site-header.is-solid .hdr-word{ color:#141414; }
-    #site-header.is-solid .hdr-link{ color:#5C5C5C; }
-    #site-header.is-solid .hdr-link:hover{ color:#141414; }
-    #site-header.is-solid .hdr-login{ color:#fff; background:#141414; border-color:#141414; }
-    #site-header.is-solid .hdr-login:hover{ background:#000; }
-    #site-header.is-solid .hdr-menu{ color:#141414; }
-  </style>
+  <link rel="stylesheet" href="assets/css/app.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
 </head>
-<body class="antialiased">
+<body>
 
-  <!-- ============ HEADER (transparent -> solide) ============ -->
-  <header id="site-header" class="fixed top-0 inset-x-0 z-40">
-    <div class="max-w-[1400px] mx-auto px-5 sm:px-8 h-16 flex items-center justify-between">
-      <a href="#" class="hdr-word font-display font-700 text-2xl tracking-tightest">LASTFIT<span class="text-accent">.</span></a>
-
-      <nav class="hidden lg:flex items-center gap-10 uplabel">
-        <a href="#offres" class="hdr-link transition">Offres</a>
-        <a href="#sports" class="hdr-link transition">Disciplines</a>
-        <a href="#comment" class="hdr-link transition">Le principe</a>
-        <a href="#faq" class="hdr-link transition">FAQ</a>
+  <!-- ============ HEADER ============ -->
+  <header id="site-header">
+    <div class="hdr-inner">
+      <a href="index.html" class="hdr-word">LASTFIT<span class="accent-dot">.</span></a>
+      <nav class="hdr-nav uplabel">
+        <a href="#offres" class="hdr-link">Offres</a>
+        <a href="resultats.html" class="hdr-link">Rechercher</a>
+        <a href="#comment" class="hdr-link">Le principe</a>
+        <a href="#faq" class="hdr-link">FAQ</a>
       </nav>
-
-      <div class="flex items-center gap-5">
-        <a href="#" class="hdr-link hidden sm:inline uplabel transition">Inscrire ma salle</a>
-        <a href="#" class="hdr-login uplabel px-4 py-2.5 transition">Se connecter</a>
-        <button aria-label="Ouvrir le menu" class="hdr-menu lg:hidden"><i data-lucide="menu" class="w-6 h-6"></i></button>
+      <div class="hdr-actions">
+        <a href="#" class="hdr-pro uplabel">Inscrire ma salle</a>
+        <a href="connexion.html" class="hdr-login uplabel" data-auth-login>Se connecter</a>
+        <a href="mon-compte.html" class="hdr-login uplabel hidden" data-auth-account>Mon compte · <span data-auth-name></span></a>
       </div>
     </div>
   </header>
 
-  <!-- ============ HERO full-bleed ============ -->
-  <section class="relative h-[82vh] min-h-[560px] w-full overflow-hidden">
-    <img src="https://images.unsplash.com/photo-1552196563-55cd4e45efb3?auto=format&fit=crop&w=2000&q=80"
-         alt="Sportive en plein cours collectif" class="absolute inset-0 w-full h-full object-cover" />
-    <div class="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-black/5"></div>
-
-    <div class="relative h-full max-w-[1400px] mx-auto px-5 sm:px-8 flex flex-col justify-end pb-14 sm:pb-20">
-      <span class="uplabel text-white/90 mb-5">Le Too Good To Go du sport</span>
-      <h1 class="font-display font-700 text-white text-[52px] sm:text-[104px] leading-[0.92] tracking-tightest max-w-4xl">
-        Bougez plus.<br/>Payez moins<span class="text-accent">.</span>
-      </h1>
-      <p class="mt-6 text-white/90 text-base sm:text-lg max-w-lg">
-        Les places invendues des plus beaux studios près de chez vous, en dernière minute. Sans abonnement.
-      </p>
+  <!-- ============ HERO ============ -->
+  <section class="hero">
+    <img class="hero-img" src="https://images.unsplash.com/photo-1552196563-55cd4e45efb3?auto=format&fit=crop&w=2000&q=80" alt="Sportive en plein cours collectif" />
+    <div class="hero-overlay"></div>
+    <div class="hero-inner">
+      <span class="uplabel hero-eyebrow">Le Too Good To Go du sport</span>
+      <h1>Bougez plus.<br/>Payez moins<span class="accent-dot">.</span></h1>
+      <p>Les places invendues des plus beaux studios près de chez vous, en dernière minute. Sans abonnement.</p>
     </div>
   </section>
 
-  <!-- ============ SEARCH (bande blanche) ============ -->
-  <section class="max-w-[1400px] mx-auto px-5 sm:px-8 -mt-8 relative z-10">
-    <div class="bg-white border border-line shadow-[0_24px_60px_-30px_rgba(0,0,0,0.4)] p-2 sm:p-2.5 max-w-3xl">
-      <div class="flex flex-col sm:flex-row gap-1">
-        <label class="flex-1 flex items-center gap-3 px-4 py-3 hover:bg-[#FAFAF8] transition cursor-pointer">
-          <i data-lucide="map-pin" class="w-[18px] h-[18px] text-ink-soft shrink-0"></i>
-          <div class="min-w-0"><span class="block uplabel text-ink-mute">Ville</span>
-            <input placeholder="Lyon" class="w-full text-sm font-medium outline-none bg-transparent placeholder:text-ink-mute"/></div>
-        </label>
-        <span class="hidden sm:block w-px bg-line my-2"></span>
-        <label class="flex-1 flex items-center gap-3 px-4 py-3 hover:bg-[#FAFAF8] transition cursor-pointer">
-          <i data-lucide="dumbbell" class="w-[18px] h-[18px] text-ink-soft shrink-0"></i>
-          <div class="min-w-0"><span class="block uplabel text-ink-mute">Discipline</span>
-            <input placeholder="Yoga, CrossFit…" class="w-full text-sm font-medium outline-none bg-transparent placeholder:text-ink-mute"/></div>
-        </label>
-        <span class="hidden sm:block w-px bg-line my-2"></span>
-        <label class="flex-1 flex items-center gap-3 px-4 py-3 hover:bg-[#FAFAF8] transition cursor-pointer">
-          <i data-lucide="calendar-clock" class="w-[18px] h-[18px] text-ink-soft shrink-0"></i>
-          <div class="min-w-0"><span class="block uplabel text-ink-mute">Quand</span>
-            <select class="w-full text-sm font-medium outline-none bg-transparent -ml-0.5">
-              <option>Ce soir</option><option>Aujourd'hui</option><option>Demain</option><option>Ce week-end</option></select></div>
-        </label>
-        <button class="flex items-center justify-center gap-2 bg-ink text-white uplabel px-7 py-4 hover:bg-black transition">
-          Rechercher <i data-lucide="arrow-right" class="w-4 h-4"></i>
-        </button>
-      </div>
-    </div>
-    <div class="mt-5 flex flex-wrap items-center gap-x-8 gap-y-2 uplabel text-ink-mute">
-      <span>320+ studios</span><span class="text-line">/</span>
-      <span>Sans engagement</span><span class="text-line">/</span>
-      <span>Paiement sécurisé</span><span class="text-line">/</span>
+  <!-- ============ RECHERCHE ============ -->
+  <section class="search-wrap">
+    <form class="search-box" id="search-form" action="resultats.html" method="get">
+      <label class="search-field">
+        <i data-lucide="map-pin"></i>
+        <span class="fmini"><span>Ville</span>
+          <input name="ville" placeholder="Lyon" /></span>
+      </label>
+      <span class="search-sep"></span>
+      <label class="search-field">
+        <i data-lucide="dumbbell"></i>
+        <span class="fmini"><span>Discipline</span>
+          <input name="sport" placeholder="Yoga, CrossFit…" /></span>
+      </label>
+      <span class="search-sep"></span>
+      <label class="search-field">
+        <i data-lucide="calendar-clock"></i>
+        <span class="fmini"><span>Quand</span>
+          <select name="date">
+            <option value="ce-soir">Ce soir</option>
+            <option value="aujourdhui">Aujourd'hui</option>
+            <option value="demain">Demain</option>
+            <option value="week-end">Ce week-end</option>
+          </select></span>
+      </label>
+      <button type="submit" class="search-submit">Rechercher <i data-lucide="arrow-right"></i></button>
+    </form>
+    <div class="search-meta">
+      <span id="meta-studios">320+ studios</span><span class="sep">/</span>
+      <span>Sans engagement</span><span class="sep">/</span>
+      <span>Paiement sécurisé</span><span class="sep">/</span>
       <span>4,9 ★ · 2 400 avis</span>
     </div>
   </section>
 
   <!-- ============ STATEMENT ============ -->
-  <section class="max-w-[1400px] mx-auto px-5 sm:px-8 py-20 sm:py-28">
-    <div class="grid lg:grid-cols-[1.4fr_1fr] gap-8 items-end">
-      <h2 class="font-display font-600 text-[36px] sm:text-[64px] leading-[0.98] tracking-tightest max-w-3xl">
-        Une place libre<span class="text-accent">.</span> Une bonne affaire<span class="text-accent">.</span> Une séance de plus<span class="text-accent">.</span>
-      </h2>
-      <p class="text-ink-soft text-base sm:text-lg leading-relaxed">
-        Chaque cours collectif garde des places inoccupées. On les récupère et on vous les propose à prix cassé — bon pour votre corps, bon pour votre budget, bon pour la salle.
-        <a href="#comment" class="link-arrow mt-5 font-semibold text-ink">Comment ça marche <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
+  <section class="section">
+    <div class="statement">
+      <h2>Une place libre<span class="accent-dot">.</span> Une bonne affaire<span class="accent-dot">.</span> Une séance de plus<span class="accent-dot">.</span></h2>
+      <p>Chaque cours collectif garde des places inoccupées. On les récupère et on vous les propose à prix cassé — bon pour votre corps, bon pour votre budget, bon pour la salle.
+        <a href="#comment" class="link-arrow" style="margin-top:20px;color:var(--ink)">Comment ça marche <i data-lucide="arrow-right"></i></a>
       </p>
     </div>
   </section>
 
-  <!-- ============ OFFRES (grille modulaire) ============ -->
-  <section id="offres" class="max-w-[1400px] mx-auto px-5 sm:px-8 pb-8">
-    <div class="flex items-end justify-between border-t border-ink pt-6 mb-8">
+  <!-- ============ OFFRES (dynamique via API) ============ -->
+  <section id="offres" class="section section-tight">
+    <div class="section-head">
       <div>
-        <span class="uplabel text-ink-mute">Dernière minute · autour de vous</span>
-        <h2 class="mt-2 font-display font-600 text-[30px] sm:text-[44px] tracking-tightest">Les bonnes affaires du soir</h2>
+        <span class="uplabel muted">Dernière minute · autour de vous</span>
+        <h2 style="margin-top:8px">Les bonnes affaires du soir</h2>
       </div>
-      <a href="#" class="hidden sm:inline-flex link-arrow uplabel text-ink">Tout voir <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
+      <a href="resultats.html" class="link-arrow uplabel" style="color:var(--ink)">Tout voir <i data-lucide="arrow-right"></i></a>
     </div>
-
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-      <article class="group">
-        <div class="relative aspect-[4/5] overflow-hidden bg-line">
-          <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=800&q=80" alt="Yoga" class="w-full h-full object-cover group-hover:scale-[1.03] transition duration-700"/>
-          <span class="absolute top-3 left-3 bg-accent text-ink uplabel px-2.5 py-1 tnum">-55%</span>
-          <span class="absolute top-3 right-3 flex items-center gap-1 bg-white/95 text-ink uplabel px-2.5 py-1">
-            <i data-lucide="timer" class="w-3.5 h-3.5"></i><span class="countdown tnum" data-mins="192">--</span></span>
-        </div>
-        <div class="pt-3">
-          <div class="flex items-center justify-between text-[12px] text-ink-soft"><span class="font-medium">Yoga · 19h30 · 1,2 km</span>
-            <span class="flex items-center gap-1 text-ink font-medium"><i data-lucide="star" class="w-3.5 h-3.5 fill-ink"></i>4.9</span></div>
-          <h3 class="mt-1 font-display font-600 text-[18px] tracking-tighter">Vinyasa Flow — Studio Lumen</h3>
-          <div class="mt-2 flex items-center justify-between">
-            <div class="flex items-baseline gap-2"><span class="text-xl font-600 font-display tnum">8&nbsp;€</span><span class="text-sm text-ink-mute line-through tnum">18&nbsp;€</span></div>
-            <a href="#" class="w-9 h-9 grid place-items-center bg-ink text-white hover:bg-black transition"><i data-lucide="arrow-right" class="w-4 h-4"></i></a>
-          </div>
-        </div>
-      </article>
-
-      <article class="group">
-        <div class="relative aspect-[4/5] overflow-hidden bg-line">
-          <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=800&q=80" alt="CrossFit" class="w-full h-full object-cover group-hover:scale-[1.03] transition duration-700"/>
-          <span class="absolute top-3 left-3 bg-accent text-ink uplabel px-2.5 py-1 tnum">-40%</span>
-          <span class="absolute top-3 right-3 flex items-center gap-1 bg-white/95 text-ink uplabel px-2.5 py-1">
-            <i data-lucide="timer" class="w-3.5 h-3.5"></i><span class="countdown tnum" data-mins="74">--</span></span>
-        </div>
-        <div class="pt-3">
-          <div class="flex items-center justify-between text-[12px] text-ink-soft"><span class="font-medium">CrossFit · 18h00 · 2,8 km</span>
-            <span class="flex items-center gap-1 text-ink font-medium"><i data-lucide="star" class="w-3.5 h-3.5 fill-ink"></i>4.7</span></div>
-          <h3 class="mt-1 font-display font-600 text-[18px] tracking-tighter">WOD du soir — CrossBox 12</h3>
-          <div class="mt-2 flex items-center justify-between">
-            <div class="flex items-baseline gap-2"><span class="text-xl font-600 font-display tnum">12&nbsp;€</span><span class="text-sm text-ink-mute line-through tnum">20&nbsp;€</span></div>
-            <a href="#" class="w-9 h-9 grid place-items-center bg-ink text-white hover:bg-black transition"><i data-lucide="arrow-right" class="w-4 h-4"></i></a>
-          </div>
-        </div>
-      </article>
-
-      <article class="group">
-        <div class="relative aspect-[4/5] overflow-hidden bg-line">
-          <img src="https://images.unsplash.com/photo-1571902943202-507ec2618e8f?auto=format&fit=crop&w=800&q=80" alt="Pilates" class="w-full h-full object-cover group-hover:scale-[1.03] transition duration-700"/>
-          <span class="absolute top-3 left-3 bg-accent text-ink uplabel px-2.5 py-1 tnum">-65%</span>
-          <span class="absolute top-3 right-3 flex items-center gap-1 bg-white/95 text-ink uplabel px-2.5 py-1">
-            <i data-lucide="timer" class="w-3.5 h-3.5"></i><span class="countdown tnum" data-mins="118">--</span></span>
-        </div>
-        <div class="pt-3">
-          <div class="flex items-center justify-between text-[12px] text-ink-soft"><span class="font-medium">Pilates · 20h15 · 0,6 km</span>
-            <span class="flex items-center gap-1 text-ink font-medium"><i data-lucide="star" class="w-3.5 h-3.5 fill-ink"></i>5.0</span></div>
-          <h3 class="mt-1 font-display font-600 text-[18px] tracking-tighter">Pilates Reformer — Coreo</h3>
-          <div class="mt-2 flex items-center justify-between">
-            <div class="flex items-baseline gap-2"><span class="text-xl font-600 font-display tnum">9&nbsp;€</span><span class="text-sm text-ink-mute line-through tnum">26&nbsp;€</span></div>
-            <a href="#" class="w-9 h-9 grid place-items-center bg-ink text-white hover:bg-black transition"><i data-lucide="arrow-right" class="w-4 h-4"></i></a>
-          </div>
-        </div>
-      </article>
-
-      <article class="group">
-        <div class="relative aspect-[4/5] overflow-hidden bg-line">
-          <img src="https://images.unsplash.com/photo-1549719386-74dfcbf7dbed?auto=format&fit=crop&w=800&q=80" alt="Boxe" class="w-full h-full object-cover group-hover:scale-[1.03] transition duration-700"/>
-          <span class="absolute top-3 left-3 bg-accent text-ink uplabel px-2.5 py-1 tnum">-50%</span>
-          <span class="absolute top-3 right-3 flex items-center gap-1 bg-white/95 text-ink uplabel px-2.5 py-1">
-            <i data-lucide="timer" class="w-3.5 h-3.5"></i><span class="countdown tnum" data-mins="45">--</span></span>
-        </div>
-        <div class="pt-3">
-          <div class="flex items-center justify-between text-[12px] text-ink-soft"><span class="font-medium">Boxe · 18h45 · 3,1 km</span>
-            <span class="flex items-center gap-1 text-ink font-medium"><i data-lucide="star" class="w-3.5 h-3.5 fill-ink"></i>4.8</span></div>
-          <h3 class="mt-1 font-display font-600 text-[18px] tracking-tighter">Boxing Cardio — Ring Club</h3>
-          <div class="mt-2 flex items-center justify-between">
-            <div class="flex items-baseline gap-2"><span class="text-xl font-600 font-display tnum">11&nbsp;€</span><span class="text-sm text-ink-mute line-through tnum">22&nbsp;€</span></div>
-            <a href="#" class="w-9 h-9 grid place-items-center bg-ink text-white hover:bg-black transition"><i data-lucide="arrow-right" class="w-4 h-4"></i></a>
-          </div>
-        </div>
-      </article>
+    <div class="cards-grid" id="offres-grid">
+      <div class="loading-wrap" style="grid-column:1/-1"><span class="spinner"></span><p style="margin-top:12px">Chargement des offres…</p></div>
     </div>
   </section>
 
-  <!-- ============ FULL-BLEED break ============ -->
-  <section class="relative h-[70vh] min-h-[460px] w-full overflow-hidden my-16 sm:my-24">
-    <img src="https://images.unsplash.com/photo-1534258936925-c58bed479fcb?auto=format&fit=crop&w=2000&q=80" alt="Salle de sport" class="absolute inset-0 w-full h-full object-cover"/>
-    <div class="absolute inset-0 bg-gradient-to-r from-black/60 to-black/20"></div>
-    <div class="relative h-full max-w-[1400px] mx-auto px-5 sm:px-8 flex flex-col justify-center">
-      <h2 class="font-display font-700 text-white text-[40px] sm:text-[76px] leading-[0.95] tracking-tightest max-w-3xl">
-        Testez tout<span class="text-accent">.</span><br/>Sans rien signer<span class="text-accent">.</span>
-      </h2>
-      <p class="mt-5 text-white/85 text-base sm:text-lg max-w-md">Yoga lundi, boxe jeudi, Pilates dimanche. Changez de studio quand vous voulez, payez seulement les séances que vous faites.</p>
-      <a href="#offres" class="link-arrow mt-8 bg-white text-ink uplabel px-6 py-3.5 w-fit hover:bg-accent transition">Voir les offres <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
+  <!-- ============ BANDEAU ============ -->
+  <section class="fullbleed">
+    <img src="https://images.unsplash.com/photo-1534258936925-c58bed479fcb?auto=format&fit=crop&w=2000&q=80" alt="Salle de sport" />
+    <div class="fb-overlay"></div>
+    <div class="fb-inner">
+      <h2>Testez tout<span class="accent-dot">.</span><br/>Sans rien signer<span class="accent-dot">.</span></h2>
+      <p>Yoga lundi, boxe jeudi, Pilates dimanche. Changez de studio quand vous voulez, payez seulement les séances que vous faites.</p>
+      <a href="resultats.html" class="btn btn-light link-arrow" style="margin-top:32px;width:fit-content">Voir les offres <i data-lucide="arrow-right"></i></a>
     </div>
   </section>
 
-  <!-- ============ DISCIPLINES (pilules) ============ -->
-  <section id="sports" class="max-w-[1400px] mx-auto px-5 sm:px-8 py-4 sm:py-8">
-    <div class="flex items-end justify-between border-t border-ink pt-6 mb-8">
-      <h2 class="font-display font-600 text-[30px] sm:text-[44px] tracking-tightest">Explorez par discipline</h2>
-      <a href="#" class="hidden sm:inline-flex link-arrow uplabel text-ink">Tout voir <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
-    </div>
-    <div class="flex flex-wrap gap-2.5">
-      <a href="#" class="group inline-flex items-center gap-2.5 border border-line pl-2 pr-5 py-2 hover:border-ink transition">
-        <span class="grid place-items-center w-8 h-8 bg-[#FAFAF8] text-ink"><i data-lucide="flower-2" class="w-[18px] h-[18px]"></i></span><span class="text-sm font-medium">Yoga</span></a>
-      <a href="#" class="group inline-flex items-center gap-2.5 border border-line pl-2 pr-5 py-2 hover:border-ink transition">
-        <span class="grid place-items-center w-8 h-8 bg-[#FAFAF8] text-ink"><i data-lucide="dumbbell" class="w-[18px] h-[18px]"></i></span><span class="text-sm font-medium">CrossFit</span></a>
-      <a href="#" class="group inline-flex items-center gap-2.5 border border-line pl-2 pr-5 py-2 hover:border-ink transition">
-        <span class="grid place-items-center w-8 h-8 bg-[#FAFAF8] text-ink"><i data-lucide="activity" class="w-[18px] h-[18px]"></i></span><span class="text-sm font-medium">Pilates</span></a>
-      <a href="#" class="group inline-flex items-center gap-2.5 border border-line pl-2 pr-5 py-2 hover:border-ink transition">
-        <span class="grid place-items-center w-8 h-8 bg-[#FAFAF8] text-ink"><i data-lucide="swords" class="w-[18px] h-[18px]"></i></span><span class="text-sm font-medium">Boxe</span></a>
-      <a href="#" class="group inline-flex items-center gap-2.5 border border-line pl-2 pr-5 py-2 hover:border-ink transition">
-        <span class="grid place-items-center w-8 h-8 bg-[#FAFAF8] text-ink"><i data-lucide="bike" class="w-[18px] h-[18px]"></i></span><span class="text-sm font-medium">Cycling</span></a>
-      <a href="#" class="group inline-flex items-center gap-2.5 border border-line pl-2 pr-5 py-2 hover:border-ink transition">
-        <span class="grid place-items-center w-8 h-8 bg-[#FAFAF8] text-ink"><i data-lucide="heart-pulse" class="w-[18px] h-[18px]"></i></span><span class="text-sm font-medium">HIIT</span></a>
-      <a href="#" class="group inline-flex items-center gap-2.5 border border-line pl-2 pr-5 py-2 hover:border-ink transition">
-        <span class="grid place-items-center w-8 h-8 bg-[#FAFAF8] text-ink"><i data-lucide="music" class="w-[18px] h-[18px]"></i></span><span class="text-sm font-medium">Zumba</span></a>
-      <a href="#" class="group inline-flex items-center gap-2.5 border border-line pl-2 pr-5 py-2 hover:border-ink transition">
-        <span class="grid place-items-center w-8 h-8 bg-[#FAFAF8] text-ink"><i data-lucide="waves" class="w-[18px] h-[18px]"></i></span><span class="text-sm font-medium">Aquagym</span></a>
-      <a href="#" class="inline-flex items-center gap-2 bg-ink text-white uplabel px-5 py-2.5 hover:bg-black transition">Toutes <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
-    </div>
+  <!-- ============ DISCIPLINES ============ -->
+  <section id="sports" class="section section-tight">
+    <div class="section-head"><h2>Explorez par discipline</h2></div>
+    <div class="pills" id="pills"></div>
   </section>
 
   <!-- ============ LE PRINCIPE ============ -->
-  <section id="comment" class="max-w-[1400px] mx-auto px-5 sm:px-8 py-20 sm:py-28">
-    <div class="border-t border-ink pt-6 mb-12">
-      <span class="uplabel text-ink-mute">Le principe</span>
-      <h2 class="mt-2 font-display font-600 text-[32px] sm:text-[52px] tracking-tightest max-w-2xl">Trois étapes. Deux minutes. Une séance.</h2>
+  <section id="comment" class="section">
+    <div style="border-top:1px solid var(--ink);padding-top:24px;margin-bottom:48px">
+      <span class="uplabel muted">Le principe</span>
+      <h2 style="margin-top:8px;font-size:clamp(32px,5vw,52px);letter-spacing:-0.045em;font-weight:600">Trois étapes. Deux minutes. Une séance.</h2>
     </div>
-    <div class="grid sm:grid-cols-3 gap-10 sm:gap-14">
-      <div>
-        <div class="flex items-center gap-3"><span class="font-display font-700 text-[44px] tracking-tightest">01</span><span class="h-px flex-1 bg-line"></span></div>
-        <h3 class="mt-4 font-display font-600 text-[22px] tracking-tighter">Cherchez</h3>
-        <p class="mt-2 text-[15px] text-ink-soft leading-relaxed">Ville, discipline, créneau. On affiche en temps réel les places invendues près de vous.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num"><b>01</b><span class="rule"></span></div>
+        <h3>Cherchez</h3>
+        <p>Ville, discipline, créneau. On affiche en temps réel les places invendues près de vous.</p>
       </div>
-      <div>
-        <div class="flex items-center gap-3"><span class="font-display font-700 text-[44px] tracking-tightest">02</span><span class="h-px flex-1 bg-line"></span></div>
-        <h3 class="mt-4 font-display font-600 text-[22px] tracking-tighter">Réservez</h3>
-        <p class="mt-2 text-[15px] text-ink-soft leading-relaxed">Un tap, Apple Pay ou CB, prix réduit garanti. Aucun abonnement, aucun engagement.</p>
+      <div class="step">
+        <div class="step-num"><b>02</b><span class="rule"></span></div>
+        <h3>Réservez</h3>
+        <p>Un tap, Apple Pay ou CB, prix réduit garanti. Aucun abonnement, aucun engagement.</p>
       </div>
-      <div>
-        <div class="flex items-center gap-3"><span class="font-display font-700 text-[44px] tracking-tightest">03</span><span class="h-px flex-1 bg-line"></span></div>
-        <h3 class="mt-4 font-display font-600 text-[22px] tracking-tighter">Présentez-vous</h3>
-        <p class="mt-2 text-[15px] text-ink-soft leading-relaxed">Votre QR code arrive aussitôt. La salle le scanne, vous entrez. Rien d'autre.</p>
+      <div class="step">
+        <div class="step-num"><b>03</b><span class="rule"></span></div>
+        <h3>Présentez-vous</h3>
+        <p>Votre QR code arrive aussitôt. La salle le scanne, vous entrez. Rien d'autre.</p>
       </div>
     </div>
   </section>
 
   <!-- ============ AVIS ============ -->
-  <section class="border-y border-line bg-[#FAFAF8]">
-    <div class="max-w-[1400px] mx-auto px-5 sm:px-8 py-20 sm:py-28 grid lg:grid-cols-[1fr_1.1fr] gap-12 items-center">
-      <div class="aspect-[4/5] lg:aspect-square overflow-hidden">
-        <img src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=1000&q=80" alt="" class="w-full h-full object-cover"/>
-      </div>
-      <div>
-        <div class="flex gap-1 mb-6"><i data-lucide="star" class="w-5 h-5 fill-ink"></i><i data-lucide="star" class="w-5 h-5 fill-ink"></i><i data-lucide="star" class="w-5 h-5 fill-ink"></i><i data-lucide="star" class="w-5 h-5 fill-ink"></i><i data-lucide="star" class="w-5 h-5 fill-ink"></i></div>
-        <blockquote class="font-display font-600 text-[28px] sm:text-[40px] leading-[1.08] tracking-tightest">
-          « Quatre studios testés en un mois, pour le prix d'un seul cours. Un créneau se libère, je réserve, j'y suis 40 minutes plus tard. »
-        </blockquote>
-        <figcaption class="mt-8 flex items-center gap-3">
-          <img src="https://i.pravatar.cc/80?img=32" class="w-11 h-11 object-cover"/>
-          <div><p class="font-semibold text-sm">Léa Marchand</p><p class="uplabel text-ink-mute">Membre · Lyon</p></div>
-        </figcaption>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ APP CTA (2 colonnes) ============ -->
-  <section class="max-w-[1400px] mx-auto px-5 sm:px-8 py-20 sm:py-28">
-    <div class="grid lg:grid-cols-2 gap-10 items-center">
-      <div>
-        <h2 class="font-display font-700 text-[38px] sm:text-[60px] leading-[0.95] tracking-tightest">Ne ratez plus<br/>une place<span class="text-accent">.</span></h2>
-        <p class="mt-5 text-ink-soft text-base sm:text-lg max-w-md">Activez les alertes : dès qu'un cours se libère près de vous, vous êtes prévenu·e en premier.</p>
-        <div class="mt-8 flex flex-wrap gap-3">
-          <a href="#" class="link-arrow bg-ink text-white uplabel px-6 py-3.5 hover:bg-black transition"><i data-lucide="apple" class="w-5 h-5"></i> App Store</a>
-          <a href="#" class="link-arrow border border-ink text-ink uplabel px-6 py-3.5 hover:bg-ink hover:text-white transition"><i data-lucide="play" class="w-5 h-5"></i> Google Play</a>
+  <section style="border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--bg-soft)">
+    <div class="section" style="display:grid;gap:48px;align-items:center;grid-template-columns:1fr">
+      <blockquote style="max-width:900px">
+        <div style="display:flex;gap:4px;margin-bottom:24px">
+          <i data-lucide="star" style="fill:var(--ink);width:20px"></i><i data-lucide="star" style="fill:var(--ink);width:20px"></i><i data-lucide="star" style="fill:var(--ink);width:20px"></i><i data-lucide="star" style="fill:var(--ink);width:20px"></i><i data-lucide="star" style="fill:var(--ink);width:20px"></i>
         </div>
-      </div>
-      <div class="aspect-[16/10] overflow-hidden bg-line">
-        <img src="https://images.unsplash.com/photo-1518310383802-640c2de311b2?auto=format&fit=crop&w=1200&q=80" alt="" class="w-full h-full object-cover"/>
-      </div>
+        <p style="font-family:'Archivo',sans-serif;font-weight:600;font-size:clamp(24px,3.5vw,40px);line-height:1.08;letter-spacing:-0.03em">« Quatre studios testés en un mois, pour le prix d'un seul cours. Un créneau se libère, je réserve, j'y suis 40 minutes plus tard. »</p>
+        <div style="margin-top:28px;display:flex;align-items:center;gap:12px">
+          <img src="https://i.pravatar.cc/80?img=32" style="width:44px;height:44px;object-fit:cover" alt="" />
+          <div><p style="font-weight:600;font-size:14px">Léa Marchand</p><p class="uplabel muted">Membre · Lyon</p></div>
+        </div>
+      </blockquote>
     </div>
   </section>
 
   <!-- ============ FAQ ============ -->
-  <section id="faq" class="max-w-3xl mx-auto px-5 sm:px-8 pb-20 sm:pb-28">
-    <h2 class="font-display font-600 text-[30px] sm:text-[44px] tracking-tightest mb-8">Questions fréquentes</h2>
-    <div class="divide-y divide-line border-y border-ink">
-      <details class="group py-1">
-        <summary class="flex items-center justify-between gap-4 py-5 font-semibold cursor-pointer list-none text-[16px]">Pourquoi les cours sont-ils moins chers ?<i data-lucide="plus" class="w-5 h-5 text-ink-mute transition group-open:rotate-45 shrink-0"></i></summary>
-        <p class="pb-5 text-[15px] text-ink-soft leading-relaxed">Les salles nous confient uniquement les places qui seraient restées vides. Plutôt que de perdre ce revenu, elles les proposent à prix réduit en dernière minute.</p>
-      </details>
-      <details class="group py-1">
-        <summary class="flex items-center justify-between gap-4 py-5 font-semibold cursor-pointer list-none text-[16px]">Dois-je m'abonner à une salle ?<i data-lucide="plus" class="w-5 h-5 text-ink-mute transition group-open:rotate-45 shrink-0"></i></summary>
-        <p class="pb-5 text-[15px] text-ink-soft leading-relaxed">Jamais. Vous payez à la séance, sans engagement — idéal pour tester plusieurs studios.</p>
-      </details>
-      <details class="group py-1">
-        <summary class="flex items-center justify-between gap-4 py-5 font-semibold cursor-pointer list-none text-[16px]">Comment j'accède au cours ?<i data-lucide="plus" class="w-5 h-5 text-ink-mute transition group-open:rotate-45 shrink-0"></i></summary>
-        <p class="pb-5 text-[15px] text-ink-soft leading-relaxed">Un QR code vous est envoyé aussitôt. Présentez-le à l'accueil : il est scanné, votre entrée est validée.</p>
-      </details>
-      <details class="group py-1">
-        <summary class="flex items-center justify-between gap-4 py-5 font-semibold cursor-pointer list-none text-[16px]">Puis-je annuler ?<i data-lucide="plus" class="w-5 h-5 text-ink-mute transition group-open:rotate-45 shrink-0"></i></summary>
-        <p class="pb-5 text-[15px] text-ink-soft leading-relaxed">Oui, gratuitement jusqu'à 2 heures avant le début du cours. Passé ce délai, la place n'est plus remboursable.</p>
-      </details>
+  <section id="faq" class="faq" style="padding-top:80px">
+    <h2 style="font-size:clamp(30px,4vw,44px);letter-spacing:-0.045em;font-weight:600;margin-bottom:32px">Questions fréquentes</h2>
+    <div class="faq-list">
+      <details><summary>Pourquoi les cours sont-ils moins chers ?<i data-lucide="plus"></i></summary>
+        <p>Les salles nous confient uniquement les places qui seraient restées vides. Plutôt que de perdre ce revenu, elles les proposent à prix réduit en dernière minute.</p></details>
+      <details><summary>Dois-je m'abonner à une salle ?<i data-lucide="plus"></i></summary>
+        <p>Jamais. Vous payez à la séance, sans engagement — idéal pour tester plusieurs studios.</p></details>
+      <details><summary>Comment j'accède au cours ?<i data-lucide="plus"></i></summary>
+        <p>Un QR code vous est envoyé aussitôt. Présentez-le à l'accueil : il est scanné, votre entrée est validée.</p></details>
+      <details><summary>Puis-je annuler ?<i data-lucide="plus"></i></summary>
+        <p>Oui, gratuitement jusqu'à 2 heures avant le début du cours. Passé ce délai, la place n'est plus remboursable.</p></details>
     </div>
   </section>
 
-  <!-- ============ FOOTER (image atmosphérique) ============ -->
-  <footer class="relative text-white overflow-hidden">
-    <img src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?auto=format&fit=crop&w=2000&q=80" alt="" class="absolute inset-0 w-full h-full object-cover"/>
-    <div class="absolute inset-0 bg-black/80"></div>
-    <div class="relative max-w-[1400px] mx-auto px-5 sm:px-8 py-16">
-      <div class="grid sm:grid-cols-2 lg:grid-cols-5 gap-10">
-        <div class="lg:col-span-2">
-          <a href="#" class="font-display font-700 text-2xl tracking-tightest">LASTFIT<span class="text-accent">.</span></a>
-          <p class="mt-4 text-sm text-white/70 max-w-xs leading-relaxed">Le Too Good To Go du sport. On remplit les places vides — bon pour votre corps, bon pour votre budget.</p>
-          <div class="mt-5 flex gap-2">
-            <a href="#" class="grid place-items-center w-9 h-9 border border-white/25 hover:border-white transition"><i data-lucide="instagram" class="w-4 h-4"></i></a>
-            <a href="#" class="grid place-items-center w-9 h-9 border border-white/25 hover:border-white transition"><i data-lucide="facebook" class="w-4 h-4"></i></a>
-            <a href="#" class="grid place-items-center w-9 h-9 border border-white/25 hover:border-white transition"><i data-lucide="linkedin" class="w-4 h-4"></i></a>
+  <!-- ============ FOOTER ============ -->
+  <footer class="footer">
+    <img src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?auto=format&fit=crop&w=2000&q=80" alt="" />
+    <div class="ft-overlay"></div>
+    <div class="ft-inner">
+      <div class="ft-grid">
+        <div class="ft-brand">
+          <a href="index.html" class="hdr-word" style="color:#fff">LASTFIT<span class="accent-dot">.</span></a>
+          <p>Le Too Good To Go du sport. On remplit les places vides — bon pour votre corps, bon pour votre budget.</p>
+          <div class="ft-social">
+            <a href="#"><i data-lucide="instagram"></i></a>
+            <a href="#"><i data-lucide="facebook"></i></a>
+            <a href="#"><i data-lucide="linkedin"></i></a>
           </div>
         </div>
-        <div><h4 class="uplabel text-white/60 mb-4">Découvrir</h4>
-          <ul class="space-y-2.5 text-sm text-white/80">
-            <li><a href="#" class="hover:text-white transition">Yoga à Lyon</a></li>
-            <li><a href="#" class="hover:text-white transition">CrossFit à Paris</a></li>
-            <li><a href="#" class="hover:text-white transition">Pilates à Bordeaux</a></li>
-            <li><a href="#" class="hover:text-white transition">Toutes les villes</a></li></ul></div>
-        <div><h4 class="uplabel text-white/60 mb-4">Studios</h4>
-          <ul class="space-y-2.5 text-sm text-white/80">
-            <li><a href="#" class="hover:text-white transition">Devenir partenaire</a></li>
-            <li><a href="#" class="hover:text-white transition">Espace pro</a></li>
-            <li><a href="#" class="hover:text-white transition">Commission</a></li></ul></div>
-        <div><h4 class="uplabel text-white/60 mb-4">Aide</h4>
-          <ul class="space-y-2.5 text-sm text-white/80">
-            <li><a href="#" class="hover:text-white transition">FAQ</a></li>
-            <li><a href="#" class="hover:text-white transition">Contact</a></li>
-            <li><a href="#" class="hover:text-white transition">CGU · CGV</a></li>
-            <li><a href="#" class="hover:text-white transition">Confidentialité</a></li></ul></div>
+        <div><h4>Découvrir</h4><ul>
+          <li><a href="resultats.html?sport=Yoga">Yoga à Lyon</a></li>
+          <li><a href="resultats.html?sport=CrossFit">CrossFit</a></li>
+          <li><a href="resultats.html?sport=Pilates">Pilates</a></li>
+          <li><a href="resultats.html">Toutes les villes</a></li></ul></div>
+        <div><h4>Studios</h4><ul>
+          <li><a href="#">Devenir partenaire</a></li>
+          <li><a href="#">Espace pro</a></li>
+          <li><a href="#">Commission</a></li></ul></div>
+        <div><h4>Aide</h4><ul>
+          <li><a href="#faq">FAQ</a></li>
+          <li><a href="#">Contact</a></li>
+          <li><a href="#">CGU · CGV</a></li></ul></div>
       </div>
-      <div class="mt-14 pt-6 border-t border-white/15 flex flex-col sm:flex-row items-center justify-between gap-3 uplabel text-white/50">
+      <div class="ft-bottom">
         <p>© 2026 LastFit — Tous droits réservés</p>
         <p>Conçu pour les sportifs de dernière minute</p>
       </div>
     </div>
   </footer>
 
-  <script>
-    lucide.createIcons();
-
-    // Header transparent sur le hero, solide au scroll
-    const header = document.getElementById('site-header');
-    const onScroll = () => header.classList.toggle('is-solid', window.scrollY > 60);
-    onScroll();
-    window.addEventListener('scroll', onScroll, { passive:true });
-
-    function fmt(m){ const h=Math.floor(m/60), mm=Math.floor(m%60); return (h>0?h+'h':'')+String(mm).padStart(2,'0'); }
-    document.querySelectorAll('.countdown').forEach(el=>{ let s=parseInt(el.dataset.mins,10)*60;
-      (function t(){ if(s<=0){el.textContent='Fini';return;} el.textContent=fmt(s/60); s--; setTimeout(t,1000); })(); });
-  </script>
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/components.js"></script>
+  <script src="assets/js/ui.js"></script>
+  <script src="assets/js/accueil.js"></script>
 </body>
 </html>
