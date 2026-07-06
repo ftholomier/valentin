@@ -23,4 +23,15 @@ class ConfigController
         $row = Database::one('SELECT valeur FROM config WHERE cle = ?', ['commission_rate']);
         return $row ? (float) $row['valeur'] : 0.15;
     }
+
+    /** Écrit (ou crée) une valeur de configuration de façon portable SQLite/MySQL. */
+    public static function set(string $cle, string $valeur): void
+    {
+        $exists = Database::one('SELECT cle FROM config WHERE cle = ?', [$cle]);
+        if ($exists) {
+            Database::run('UPDATE config SET valeur = ? WHERE cle = ?', [$valeur, $cle]);
+        } else {
+            Database::run('INSERT INTO config (cle, valeur) VALUES (?, ?)', [$cle, $valeur]);
+        }
+    }
 }

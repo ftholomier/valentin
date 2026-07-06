@@ -101,10 +101,12 @@ cp config/config.local.example.php config/config.local.php
 | POST | `/api/payments/checkout` | Paiement simulé → QR |
 | POST | `/api/bookings/validate` | Validation d'un QR **(salle propriétaire / admin uniquement)** |
 | GET  | `/api/pro/dashboard` | Dashboard salle : cours, remplissage, CA (rôle `partner`) |
+| GET  | `/api/admin/overview` | KPI plateforme + configuration (rôle `admin`) |
+| POST | `/api/admin/config` | Modifier commission / sports / villes (rôle `admin`) |
 
 Réponse : `{ "success": bool, "message": string, "data": ... }`.
 
-**Pages (URLs propres)** : `/` · `/resultats` · `/cours?id=` · `/checkout?slot=` · `/connexion` · `/inscription` · `/mon-compte` · `/pro`.
+**Pages (URLs propres)** : `/` · `/resultats` · `/cours?id=` · `/checkout?slot=` · `/connexion` · `/inscription` · `/mon-compte` · `/pro` · `/admin`.
 
 ---
 
@@ -162,12 +164,19 @@ php -S localhost:8000 -t public router.php     # http://localhost:8000
 inscription/connexion/session · réservation anti-survente · paiement simulé (Stripe mock) ·
 génération + affichage **QR code** · espace sportif (historique, stats, QR) ·
 **Dashboard salle (espace pro)** : cours du jour, validation QR sécurisée, remplissage & CA ·
-redirection par rôle (sportif → `/mon-compte`, salle → `/pro`) ·
+**Backoffice admin** : KPI plateforme, réglage de la commission, gestion des sports & villes ·
+redirection par rôle (sportif → `/mon-compte`, salle → `/pro`, admin → `/admin`) ·
 base SQL (SQLite + dump MySQL) · **architecture webroot isolé + secrets séparés**.
 
+### Créer un administrateur (aucun compte admin n'est seedé en prod)
+1. Inscris-toi normalement via `/inscription`.
+2. Promeus ce compte : en phpMyAdmin, `UPDATE users SET role='admin' WHERE email='ton@email.fr';`
+   (ou en CLI : `php database/make_admin.php ton@email.fr`).
+3. Reconnecte-toi → tu arrives sur `/admin`.
+
 **À venir :**
-- [ ] **Backoffice admin** : commission, gestion des sports & villes
-- [ ] Favoris, factures téléchargeables, vraie intégration Stripe (webhook)
+- [ ] Favoris sportifs, factures téléchargeables
+- [ ] Gestion des salles/cours par l'admin ; vraie intégration Stripe (webhook)
 
 ---
 

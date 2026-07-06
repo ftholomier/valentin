@@ -41,11 +41,11 @@ async function refreshAuthUI() {
         accountEl.classList.remove('hidden');
         const label = accountEl.querySelector('[data-auth-name]');
         if (label) label.textContent = user.nom.split(' ')[0];
-        // Les salles pointent vers l'espace pro plutôt que l'espace sportif.
+        // Chaque rôle pointe vers son espace.
         if (user.role === 'partner') {
           accountEl.setAttribute('href', '/pro');
         } else if (user.role === 'admin') {
-          accountEl.setAttribute('href', '/mon-compte');
+          accountEl.setAttribute('href', '/admin');
         }
       }
       window.__user = user;

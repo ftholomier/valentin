@@ -19,8 +19,9 @@ function redirectTarget(user) {
     r = null;
   }
   if (r) return r;
-  // Redirection par rôle : les salles vont vers l'espace pro.
+  // Redirection par rôle vers l'espace correspondant.
   if (user && user.role === 'partner') return '/pro';
+  if (user && user.role === 'admin') return '/admin';
   return '/mon-compte';
 }
 

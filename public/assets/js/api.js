@@ -39,6 +39,8 @@ const api = {
   checkout:      (d)     => api.post('/payments/checkout', d),
   proDashboard:  ()      => api.get('/pro/dashboard'),
   validateQr:    (token) => api.post('/bookings/validate', { qr_token: token }),
+  adminOverview: ()      => api.get('/admin/overview'),
+  adminConfig:   (d)     => api.post('/admin/config', d),
 };
 
 /* ---------- Formatage ---------- */
