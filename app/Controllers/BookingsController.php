@@ -149,32 +149,41 @@ class BookingsController
     {
         $user = Auth::requireLogin();
         $rows = Database::all(
-            'SELECT b.id, b.statut_paiement, b.qr_token, b.montant_paye, b.created_at, b.validated_at,
-                    s.titre, s.sport, s.date_debut, s.duree_min,
+            'SELECT b.id, b.slot_id, b.statut_paiement, b.qr_token, b.montant_paye, b.created_at, b.validated_at,
+                    s.titre, s.sport, s.date_debut, s.duree_min, s.prix_initial, s.prix_reduit,
                     p.nom AS salle, p.adresse, p.ville
              FROM bookings b
              JOIN slots s    ON s.id = b.slot_id
              JOIN partners p ON p.id = s.partner_id
              WHERE b.user_id = ?
-             ORDER BY b.created_at DESC',
+             ORDER BY s.date_debut DESC',
             [$user['id']]
         );
 
-        $data = array_map(fn($r) => [
-            'id'              => (int) $r['id'],
-            'titre'           => $r['titre'],
-            'sport'           => $r['sport'],
-            'salle'           => $r['salle'],
-            'adresse'         => $r['adresse'],
-            'ville'           => $r['ville'],
-            'date_debut'      => $r['date_debut'],
-            'duree_min'       => (int) $r['duree_min'],
-            'montant_paye'    => (float) $r['montant_paye'],
-            'statut_paiement' => $r['statut_paiement'],
-            'qr_token'        => $r['qr_token'],
-            'validated_at'    => $r['validated_at'],
-            'created_at'      => $r['created_at'],
-        ], $rows);
+        $data = array_map(function ($r) {
+            $paye = in_array($r['statut_paiement'], ['paye', 'valide'], true);
+            return [
+                'id'              => (int) $r['id'],
+                'slot_id'         => (int) $r['slot_id'],
+                'titre'           => $r['titre'],
+                'sport'           => $r['sport'],
+                'salle'           => $r['salle'],
+                'adresse'         => $r['adresse'],
+                'ville'           => $r['ville'],
+                'date_debut'      => $r['date_debut'],
+                'duree_min'       => (int) $r['duree_min'],
+                'prix_initial'    => (float) $r['prix_initial'],
+                'prix_reduit'     => (float) $r['prix_reduit'],
+                'montant_paye'    => (float) $r['montant_paye'],
+                // Économie réalisée grâce à la promo (seulement si le billet est payé).
+                'economie'        => $paye ? round((float) $r['prix_initial'] - (float) $r['prix_reduit'], 2) : 0.0,
+                'a_venir'         => strtotime($r['date_debut']) > time(),
+                'statut_paiement' => $r['statut_paiement'],
+                'qr_token'        => $r['qr_token'],
+                'validated_at'    => $r['validated_at'],
+                'created_at'      => $r['created_at'],
+            ];
+        }, $rows);
 
         Response::ok($data);
     }
