@@ -108,7 +108,12 @@ INSERT INTO partners (id, nom, description, adresse, ville, lat, lng, equipement
  (2,'CrossBox 12','Box CrossFit haute intensité, coachs certifiés, matériel neuf.','34 cours Lafayette, 69003 Lyon','Lyon',45.7620000,4.8560000,'Rig complet, Assault bikes, Douches',4.7),
  (3,'Coreo Pilates','Le spécialiste du Reformer à Lyon, cours en petit comité.','8 rue Auguste Comte, 69002 Lyon','Lyon',45.7560000,4.8300000,'Reformers, Cardio, Vestiaires',5.0),
  (4,'Ring Club','Salle de boxe anglaise & cardio-boxing, ambiance club.','21 rue Paul Bert, 69003 Lyon','Lyon',45.7600000,4.8600000,'Rings, Sacs, Douches',4.8),
- (5,'Pulse Cycling','Studio de cycling indoor immersif, son et lumière.','5 quai Victor Augagneur, 69003 Lyon','Lyon',45.7580000,4.8450000,'Vélos connectés, Douches, Serviettes',4.6);
+ (5,'Pulse Cycling','Studio de cycling indoor immersif, son et lumière.','5 quai Victor Augagneur, 69003 Lyon','Lyon',45.7580000,4.8450000,'Vélos connectés, Douches, Serviettes',4.6),
+ (6,'Aqua Lyon','Bassin chauffé, cours d''aquagym et aquabike en petit groupe.','30 avenue Jean Jaurès, 69007 Lyon','Lyon',45.7480000,4.8420000,'Bassin, Vestiaires, Sèche-cheveux',4.5),
+ (7,'Zenith Yoga','Studio de Hatha et Vinyasa, ambiance apaisante.','3 rue de la Charité, 69002 Lyon','Lyon',45.7540000,4.8330000,'Tapis, Thé offert, Vestiaires',4.8),
+ (8,'Move Dance','Cours de Zumba et danse fitness, énergie garantie.','18 rue de Marseille, 69007 Lyon','Lyon',45.7460000,4.8410000,'Parquet, Douches, Casiers',4.7),
+ (9,'Studio Nation','Studio boutique parisien : yoga, Pilates, HIIT.','25 rue du Faubourg Saint-Antoine, 75011 Paris','Paris',48.8520000,2.3720000,'Douches, Vestiaires, Serviettes',4.9),
+ (10,'Bordeaux Box','Box CrossFit et cycling au cœur de Bordeaux.','12 cours de l''Intendance, 33000 Bordeaux','Bordeaux',44.8420000,-0.5760000,'Rig, Vélos, Douches',4.6);
 
 -- Cours à venir, datés relativement à l'import (toujours réservables en démo).
 INSERT INTO slots (partner_id, sport, titre, coach, date_debut, duree_min, prix_initial, prix_reduit, places_totales, places_restantes, image_url, statut) VALUES
@@ -119,7 +124,19 @@ INSERT INTO slots (partner_id, sport, titre, coach, date_debut, duree_min, prix_
  (5,'Cycling','Ride Nocturne','Ana P.',DATE_ADD(NOW(), INTERVAL 75 MINUTE),45,19,10,20,8,'https://images.unsplash.com/photo-1518310383802-640c2de311b2?auto=format&fit=crop&w=800&q=80','disponible'),
  (1,'Yoga','Yin & Relaxation','Camille R.',DATE_ADD(NOW(), INTERVAL 180 MINUTE),60,16,7,12,4,'https://images.unsplash.com/photo-1552196563-55cd4e45efb3?auto=format&fit=crop&w=800&q=80','disponible'),
  (2,'HIIT','HIIT Express','Marco T.',DATE_ADD(NOW(), INTERVAL 105 MINUTE),45,18,9,15,7,'https://images.unsplash.com/photo-1534258936925-c58bed479fcb?auto=format&fit=crop&w=800&q=80','disponible'),
- (3,'Pilates','Reformer Débutant','Julie B.',DATE_ADD(NOW(), INTERVAL 30 MINUTE),55,24,10,8,1,'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=800&q=80','disponible');
+ (3,'Pilates','Reformer Débutant','Julie B.',DATE_ADD(NOW(), INTERVAL 30 MINUTE),55,24,10,8,1,'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=800&q=80','disponible'),
+ (6,'Aquagym','Aquabike Tonic','Nadia L.',DATE_ADD(NOW(), INTERVAL 120 MINUTE),45,20,11,12,6,'https://images.unsplash.com/photo-1560089000-7433a4ebbd64?auto=format&fit=crop&w=800&q=80','disponible'),
+ (6,'Aquagym','Aquagym Douce','Nadia L.',DATE_ADD(NOW(), INTERVAL 240 MINUTE),45,18,9,12,9,'https://images.unsplash.com/photo-1600965962361-9035dbfd1c50?auto=format&fit=crop&w=800&q=80','disponible'),
+ (7,'Yoga','Hatha Matinal','Élodie M.',DATE_ADD(NOW(), INTERVAL 200 MINUTE),60,17,8,16,10,'https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=800&q=80','disponible'),
+ (7,'Yoga','Power Yoga','Élodie M.',DATE_ADD(NOW(), INTERVAL 135 MINUTE),60,19,9,14,2,'https://images.unsplash.com/photo-1588286840104-8957b019727f?auto=format&fit=crop&w=800&q=80','disponible'),
+ (8,'Zumba','Zumba Party','Lucas D.',DATE_ADD(NOW(), INTERVAL 95 MINUTE),55,16,7,25,12,'https://images.unsplash.com/photo-1524594152303-9fd13543fe6e?auto=format&fit=crop&w=800&q=80','disponible'),
+ (8,'HIIT','HIIT & Abs','Lucas D.',DATE_ADD(NOW(), INTERVAL 50 MINUTE),40,17,8,18,4,'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=800&q=80','disponible'),
+ (4,'Boxe','Sparring Débutant','Sofiane K.',DATE_ADD(NOW(), INTERVAL 165 MINUTE),60,22,12,10,3,'https://images.unsplash.com/photo-1544216717-3bbf52512659?auto=format&fit=crop&w=800&q=80','disponible'),
+ (5,'Cycling','Endurance Ride','Ana P.',DATE_ADD(NOW(), INTERVAL 210 MINUTE),50,19,10,20,14,'https://images.unsplash.com/photo-1534787238916-9ba6764efd4f?auto=format&fit=crop&w=800&q=80','disponible'),
+ (9,'HIIT','HIIT Express Paris','Inès F.',DATE_ADD(NOW(), INTERVAL 80 MINUTE),45,22,12,14,5,'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=800&q=80','disponible'),
+ (9,'Pilates','Pilates Mat','Inès F.',DATE_ADD(NOW(), INTERVAL 140 MINUTE),55,24,11,12,6,'https://images.unsplash.com/photo-1518310383802-640c2de311b2?auto=format&fit=crop&w=800&q=80','disponible'),
+ (10,'CrossFit','WOD Bordeaux','Théo G.',DATE_ADD(NOW(), INTERVAL 110 MINUTE),60,21,12,16,7,'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=800&q=80','disponible'),
+ (10,'Cycling','Spin Bordeaux','Théo G.',DATE_ADD(NOW(), INTERVAL 175 MINUTE),45,18,9,18,8,'https://images.unsplash.com/photo-1518310383802-640c2de311b2?auto=format&fit=crop&w=800&q=80','disponible');
 
 -- Comptes de TEST uniquement (mdp : demo1234) — à supprimer avant ouverture :
 --   DELETE FROM users WHERE email LIKE '%@demo.fr';

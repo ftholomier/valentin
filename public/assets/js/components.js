@@ -45,6 +45,42 @@ function slotCardHTML(s) {
     </a>`;
 }
 
+/* Carte d'offre enrichie (page /resultats) : urgence, salle, CTA. */
+function offerCardHTML(s) {
+  const soldout = s.places_restantes <= 0 || s.statut === 'complet';
+  const mins = minutesUntil(s.date_debut);
+  const dist = s.distance_km != null ? ' · ' + fmt.distance(s.distance_km) : '';
+  const low = !soldout && s.places_restantes <= 3;
+  return `
+    <a class="card offer-card" href="/cours?id=${s.id}">
+      <div class="card-media">
+        <img src="${escapeHtml(s.image_url)}" alt="${escapeHtml(s.titre)}" loading="lazy" />
+        <span class="card-badge tnum">-${s.reduction}%</span>
+        ${soldout ? '' : `<span class="card-timer"><i data-lucide="timer"></i><span class="tnum" data-countdown="${mins}">${fmtCountdown(mins)}</span></span>`}
+        ${soldout ? '<span class="card-soldout">Complet</span>' : ''}
+        ${low ? `<span class="offer-urgency"><span class="dot"></span>Plus que ${s.places_restantes} place${s.places_restantes > 1 ? 's' : ''}</span>` : ''}
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <span style="font-weight:500">${escapeHtml(s.sport)} · ${fmt.heure(s.date_debut)}${dist}</span>
+          <span class="rating"><i data-lucide="star"></i>${s.note.toFixed(1)}</span>
+        </div>
+        <h3 class="card-title">${escapeHtml(s.titre)}</h3>
+        <p class="offer-salle soft">${escapeHtml(s.salle)} · ${escapeHtml(s.ville)}</p>
+        <div class="offer-foot">
+          <div class="card-price"><span class="now tnum" style="font-size:22px">${fmt.euro(s.prix_reduit)}</span><span class="was tnum">${fmt.euro(s.prix_initial)}</span></div>
+          <span class="offer-cta">${soldout ? 'Voir' : 'Réserver'} <i data-lucide="arrow-right"></i></span>
+        </div>
+      </div>
+    </a>`;
+}
+
+/* Squelette de chargement (grille d'offres). */
+function skeletonCardHTML() {
+  return `<div class="skeleton-card"><div class="sk-media"></div>
+    <div class="sk-line"></div><div class="sk-line short"></div><div class="sk-line short pad"></div></div>`;
+}
+
 /* Ligne de résultat (page recherche). */
 function slotRowHTML(s) {
   const soldout = s.places_restantes <= 0 || s.statut === 'complet';

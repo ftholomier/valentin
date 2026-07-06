@@ -50,6 +50,11 @@ $partners = [
     ['Coreo Pilates', 'Le spécialiste du Reformer à Lyon, cours en petit comité.', '8 rue Auguste Comte, 69002 Lyon', 'Lyon', 45.7560, 4.8300, 'Reformers, Cardio, Vestiaires', 5.0],
     ['Ring Club', 'Salle de boxe anglaise & cardio-boxing, ambiance club.', '21 rue Paul Bert, 69003 Lyon', 'Lyon', 45.7600, 4.8600, 'Rings, Sacs, Douches', 4.8],
     ['Pulse Cycling', 'Studio de cycling indoor immersif, son et lumière.', '5 quai Victor Augagneur, 69003 Lyon', 'Lyon', 45.7580, 4.8450, 'Vélos connectés, Douches, Serviettes', 4.6],
+    ['Aqua Lyon', 'Bassin chauffé, cours d\'aquagym et aquabike en petit groupe.', '30 avenue Jean Jaurès, 69007 Lyon', 'Lyon', 45.7480, 4.8420, 'Bassin, Vestiaires, Sèche-cheveux', 4.5],
+    ['Zenith Yoga', 'Studio de Hatha et Vinyasa, ambiance apaisante.', '3 rue de la Charité, 69002 Lyon', 'Lyon', 45.7540, 4.8330, 'Tapis, Thé offert, Vestiaires', 4.8],
+    ['Move Dance', 'Cours de Zumba et danse fitness, énergie garantie.', '18 rue de Marseille, 69007 Lyon', 'Lyon', 45.7460, 4.8410, 'Parquet, Douches, Casiers', 4.7],
+    ['Studio Nation', 'Studio boutique parisien : yoga, Pilates, HIIT.', '25 rue du Faubourg Saint-Antoine, 75011 Paris', 'Paris', 48.8520, 2.3720, 'Douches, Vestiaires, Serviettes', 4.9],
+    ['Bordeaux Box', 'Box CrossFit et cycling au cœur de Bordeaux.', '12 cours de l\'Intendance, 33000 Bordeaux', 'Bordeaux', 44.8420, -0.5760, 'Rig, Vélos, Douches', 4.6],
 ];
 $partnerIds = [];
 foreach ($partners as $p) {
@@ -75,6 +80,18 @@ $slots = [
     ['Studio Lumen', 'Yoga',     'Yin & Relaxation',    'Camille R.', 180, 60, 16, 7,  12, 4, '1552196563-55cd4e45efb3'],
     ['CrossBox 12',  'HIIT',     'HIIT Express',        'Marco T.',   105, 45, 18, 9,  15, 7, '1534258936925-c58bed479fcb'],
     ['Coreo Pilates','Pilates',  'Reformer Débutant',   'Julie B.',    30, 55, 24, 10, 8,  1, '1517836357463-d25dfeac3438'],
+    ['Aqua Lyon',    'Aquagym',  'Aquabike Tonic',      'Nadia L.',   120, 45, 20, 11, 12, 6, '1560089000-7433a4ebbd64'],
+    ['Aqua Lyon',    'Aquagym',  'Aquagym Douce',       'Nadia L.',   240, 45, 18, 9,  12, 9, '1600965962361-9035dbfd1c50'],
+    ['Zenith Yoga',  'Yoga',     'Hatha Matinal',       'Élodie M.',  200, 60, 17, 8,  16, 10, '1506126613408-eca07ce68773'],
+    ['Zenith Yoga',  'Yoga',     'Power Yoga',          'Élodie M.',  135, 60, 19, 9,  14, 2, '1588286840104-8957b019727f'],
+    ['Move Dance',   'Zumba',    'Zumba Party',         'Lucas D.',    95, 55, 16, 7,  25, 12, '1524594152303-9fd13543fe6e'],
+    ['Move Dance',   'HIIT',     'HIIT & Abs',          'Lucas D.',    50, 40, 17, 8,  18, 4, '1518611012118-696072aa579a'],
+    ['Ring Club',    'Boxe',     'Sparring Débutant',   'Sofiane K.', 165, 60, 22, 12, 10, 3, '1544216717-3bbf52512659'],
+    ['Pulse Cycling','Cycling',  'Endurance Ride',      'Ana P.',     210, 50, 19, 10, 20, 14, '1534787238916-9ba6764efd4f'],
+    ['Studio Nation','HIIT',     'HIIT Express Paris',  'Inès F.',     80, 45, 22, 12, 14, 5, '1534438327276-14e5300c3a48'],
+    ['Studio Nation','Pilates',  'Pilates Mat',         'Inès F.',    140, 55, 24, 11, 12, 6, '1518310383802-640c2de311b2'],
+    ['Bordeaux Box', 'CrossFit', 'WOD Bordeaux',        'Théo G.',    110, 60, 21, 12, 16, 7, '1534438327276-14e5300c3a48'],
+    ['Bordeaux Box', 'Cycling',  'Spin Bordeaux',       'Théo G.',    175, 45, 18, 9,  18, 8, '1518310383802-640c2de311b2'],
 ];
 $stmt = 0;
 foreach ($slots as $s) {

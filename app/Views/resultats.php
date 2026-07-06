@@ -1,60 +1,42 @@
   <main class="page">
-    <div style="margin-bottom:24px">
-      <span class="uplabel muted">Dernière minute</span>
-      <h1 class="page-title" id="results-title">Cours disponibles</h1>
+    <div class="offers-head">
+      <span class="uplabel muted">Dernière minute · autour de vous</span>
+      <h1 class="page-title">Les offres du moment</h1>
+      <p class="soft" id="offers-sub">Des cours à prix cassé, près de chez vous, en dernière minute.</p>
     </div>
 
-    <!-- Filtres (client-side JS) -->
-    <div class="filters">
-      <div class="filter">
-        <label>Ville</label>
-        <select id="f-ville"><option value="">Toutes</option></select>
-      </div>
-      <div class="filter">
-        <label>Discipline</label>
-        <select id="f-sport"><option value="">Toutes</option></select>
-      </div>
-      <div class="filter">
-        <label>Quand</label>
-        <select id="f-date">
-          <option value="">Tout</option>
-          <option value="ce-soir">Ce soir</option>
-          <option value="aujourdhui">Aujourd'hui</option>
-          <option value="demain">Demain</option>
-          <option value="week-end">Week-end</option>
+    <!-- Barre d'outils collante -->
+    <div class="offers-toolbar">
+      <div class="chips-row no-scrollbar" id="sport-chips"></div>
+      <div class="toolbar-controls">
+        <div class="date-pills" id="date-pills">
+          <button type="button" class="pill-toggle is-active" data-date="">Tout</button>
+          <button type="button" class="pill-toggle" data-date="ce-soir">Ce soir</button>
+          <button type="button" class="pill-toggle" data-date="demain">Demain</button>
+          <button type="button" class="pill-toggle" data-date="week-end">Week-end</button>
+        </div>
+        <select id="f-ville" aria-label="Ville"><option value="">Toutes les villes</option></select>
+        <select id="f-tri" aria-label="Trier par">
+          <option value="distance">Trier : distance</option>
+          <option value="prix">Trier : prix ↑</option>
+          <option value="reduction">Trier : promo ↓</option>
+          <option value="places">Trier : places</option>
+          <option value="heure">Trier : heure</option>
         </select>
-      </div>
-      <div class="filter">
-        <label>Prix max</label>
-        <input id="f-prix" type="number" min="0" placeholder="€" style="width:90px" />
-      </div>
-      <div class="filter">
-        <label>Trier par</label>
-        <select id="f-tri">
-          <option value="distance">Distance</option>
-          <option value="prix">Prix croissant</option>
-          <option value="places">Places restantes</option>
-          <option value="heure">Heure</option>
-        </select>
-      </div>
-      <div class="filter">
-        <label>&nbsp;</label>
-        <label style="display:flex;align-items:center;gap:8px;border:1px solid var(--line);padding:9px 12px;cursor:pointer;font-size:14px">
-          <input id="f-dispo" type="checkbox" style="width:auto" /> Places dispo
-        </label>
-      </div>
-    </div>
-
-    <div class="results-layout">
-      <div>
-        <p class="uplabel muted" id="results-count" style="margin-bottom:16px">—</p>
-        <div class="results-list" id="results-list">
-          <div class="loading-wrap"><span class="spinner"></span><p style="margin-top:12px">Recherche…</p></div>
+        <label class="dispo-toggle"><input id="f-dispo" type="checkbox" /> Dispo</label>
+        <div class="view-toggle">
+          <button type="button" id="view-grid" class="is-active"><i data-lucide="layout-grid"></i> Grille</button>
+          <button type="button" id="view-map"><i data-lucide="map"></i> Carte</button>
         </div>
       </div>
-      <aside class="map-panel">
-        <iframe id="map-frame" title="Carte" loading="lazy"
-          src="https://www.openstreetmap.org/export/embed.html?bbox=4.79%2C45.74%2C4.89%2C45.78&layer=mapnik&marker=45.764%2C4.8357"></iframe>
-      </aside>
+    </div>
+
+    <p class="offers-count uplabel muted" id="results-count">—</p>
+
+    <div id="grid-view" class="cards-grid offers-grid"></div>
+
+    <div id="map-view" class="map-full hidden">
+      <iframe id="map-frame" title="Carte des offres" loading="lazy"
+        src="https://www.openstreetmap.org/export/embed.html?bbox=4.79%2C45.74%2C4.89%2C45.78&layer=mapnik&marker=45.764%2C4.8357"></iframe>
     </div>
   </main>
