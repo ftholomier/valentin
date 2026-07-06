@@ -29,9 +29,21 @@ define('APP_NAME', 'LastFit');
 define('APP_ENV', lf_cfg($secrets, 'app_env', 'LF_ENV', 'prod'));   // 'dev' | 'prod'
 define('SESSION_NAME', 'lastfit_sess');
 
-// Version des assets (CSS/JS) — à incrémenter à chaque déploiement pour forcer
-// le rechargement côté navigateur (anti-cache). En dev, on repart du temps courant.
-define('APP_VERSION', APP_ENV === 'dev' ? (string) time() : '2026070501');
+// Version des assets (CSS/JS) pour l'anti-cache. En prod, on prend la date de
+// modification du fichier CSS/JS le plus récent : dès qu'un asset est ré-uploadé,
+// la version change automatiquement et le navigateur recharge la bonne version.
+function lf_assets_version(): string
+{
+    $latest = 0;
+    foreach (glob(__DIR__ . '/../public/assets/{css,js}/*.{css,js}', GLOB_BRACE) ?: [] as $f) {
+        $m = @filemtime($f);
+        if ($m && $m > $latest) {
+            $latest = $m;
+        }
+    }
+    return (string) ($latest ?: 1);
+}
+define('APP_VERSION', APP_ENV === 'dev' ? (string) time() : lf_assets_version());
 
 // --- Base de données -------------------------------------------------------
 define('DB_DRIVER', lf_cfg($secrets, 'db_driver', 'LF_DB_DRIVER', 'sqlite'));   // 'sqlite' | 'mysql'
